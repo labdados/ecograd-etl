@@ -3,7 +3,6 @@ import sys
 import urllib.request
 
 def download_file(url, output_file):
-    print("Downloading from {} to {}".format(url, output_file))
     output_filename = url.split('/')[-1]
     #output_path = os.path.join(output_dir, output_filename)
     urllib.request.urlretrieve(url, filename=output_file)
