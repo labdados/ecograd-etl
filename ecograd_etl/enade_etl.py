@@ -30,7 +30,7 @@ def load_enade(zip_file_name, db_con, sql_table, sql_schema="public"):
     cur_cols = utils.list_db_column_names(db_con, sql_table, sql_schema)
     for df in pd.read_csv(csv_file, delimiter = ";", chunksize=10000, low_memory=False):
         new_cols = df.columns.difference(cur_cols)
-        if not new_cols.empty:
+        if cur_cols.empty and not new_cols.empty:
             print(f"New columns found: {new_cols}")
             utils.add_db_table_columns(new_cols, "double precision", db_con, sql_table, sql_schema)
         df.to_sql(
