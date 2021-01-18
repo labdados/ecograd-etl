@@ -22,15 +22,18 @@ enade_urls = {
     2010: "https://download.inep.gov.br/microdados/Enade_Microdados/microdados_enade_2010.zip"
 }
 
+def download_enade(url, output_file):
+    print(f"Downloading {url} to {output_file}")
+    download_file(url, output_file)
+
 def connect_db(db_url):
+    print("Connecting to database")
     db_engine = create_engine(db_url, pool_recycle=3600)
     return db_engine.connect()
 
-def download_enade(url, output_file):
-    download_file(url, output_file)
-
 def drop_enade_table(db_con, sql_table, sql_schema="public"):
-    db_con.execute(f"DROP TABLE {sql_schema}.{sql_table};")
+    print(f"Dropping table {sql_schema}.{sql_table}")
+    db_con.execute(f"DROP TABLE IF EXISTS {sql_schema}.{sql_table};")
 
 def list_column_names(db_con, sql_table, sql_schema="public"):
     res = pd.read_sql(f"SELECT * FROM {sql_schema}.{sql_table} LIMIT 0;", db_con)
@@ -46,11 +49,13 @@ def open_csv_file_from_zip(zip_file_name):
     return(zip_file.open(csv_file_name))
 
 def load_enade(zip_file_name, db_con, sql_table, sql_schema="public"):
+    print(f"Loading {zip_file_name} to {sql_schema}.{sql_table}")
     csv_file = open_csv_file_from_zip(zip_file_name)
     cur_cols = list_column_names(db_con, sql_table, sql_schema)
     for df in pd.read_csv(csv_file, delimiter = ";", chunksize=10000):
         new_cols = cur_cols.difference(df.columns)
         if new_cols:
+            print(f"New columns found: {new_cols}")
             add_table_columns(new_cols, db_con, sql_table, sql_schema)
         df.to_sql(
             sql_table, 
@@ -59,7 +64,6 @@ def load_enade(zip_file_name, db_con, sql_table, sql_schema="public"):
             index=False,
             if_exists='append'
         )
-
 
 def main(args):
     output_dir = "data"
