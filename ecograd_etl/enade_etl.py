@@ -1,9 +1,7 @@
 from dotenv import load_dotenv
-from sqlalchemy import create_engine
-from utils import download_file
+import ecograd_etl.utils as utils
 import os
 import pandas as pd
-import psycopg2
 import sys
 from zipfile import ZipFile
 
@@ -24,42 +22,17 @@ enade_urls = {
 
 def download_enade(url, output_file):
     print(f"Downloading {url} to {output_file}")
-    download_file(url, output_file)
-
-def connect_db(db_url):
-    print("Connecting to database")
-    db_engine = create_engine(db_url, pool_recycle=3600)
-    return db_engine.connect()
-
-def drop_enade_table(db_con, sql_table, sql_schema="public"):
-    print(f"Dropping table {sql_schema}.{sql_table}")
-    db_con.execute(f"DROP TABLE IF EXISTS {sql_schema}.{sql_table};")
-
-def list_column_names(db_con, sql_table, sql_schema="public"):
-    try:
-        res = pd.read_sql(f"SELECT * FROM {sql_schema}.{sql_table} LIMIT 0;", db_con)
-        return(res.columns)
-    except:
-        return pd.Index([])
-
-def add_table_columns(cols, db_con, sql_table, sql_schema="public"):
-    add_cols = ", ".join(["ADD COLUMN {}".format(x) for x in cols])
-    db_con.execute(f"ALTER TABLE IF EXISTS {sql_schema}.{sql_table} {add_cols};")
-
-def open_csv_file_from_zip(zip_file_name):
-    zip_file = ZipFile(zip_file_name, "r")
-    csv_file_name = [name for name in zip_file.namelist() if name.endswith('.txt')][0]
-    return(zip_file.open(csv_file_name))
+    utils.download_file(url, output_file)
 
 def load_enade(zip_file_name, db_con, sql_table, sql_schema="public"):
     print(f"Loading {zip_file_name} to {sql_schema}.{sql_table}")
-    csv_file = open_csv_file_from_zip(zip_file_name)
-    cur_cols = list_column_names(db_con, sql_table, sql_schema)
-    for df in pd.read_csv(csv_file, delimiter = ";", chunksize=10000):
-        new_cols = cur_cols.difference(df.columns)
+    csv_file = utils.open_file_from_zip(zip_file_name)
+    cur_cols = utils.list_db_column_names(db_con, sql_table, sql_schema)
+    for df in pd.read_csv(csv_file, delimiter = ";", chunksize=10000, low_memory=False):
+        new_cols = df.columns.difference(cur_cols)
         if not new_cols.empty:
             print(f"New columns found: {new_cols}")
-            add_table_columns(new_cols, db_con, sql_table, sql_schema)
+            utils.add_db_table_columns(new_cols, "double precision", db_con, sql_table, sql_schema)
         df.to_sql(
             sql_table, 
             db_con,
@@ -79,8 +52,8 @@ def main(args):
     )
     sql_table = "microdados_enade"
     sql_schema = "enade"
-    db_con = connect_db(db_url)
-    drop_enade_table(db_con, sql_table, sql_schema)
+    db_con = utils.connect_db(db_url)
+    utils.drop_db_table(db_con, sql_table, sql_schema)
     for year, url in enade_urls.items():
        output_file = os.path.join(output_dir, f"microdados_enade_{year}.zip")
        download_enade(url, output_file)
