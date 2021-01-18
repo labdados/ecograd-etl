@@ -30,21 +30,34 @@ def download_enade(url, output_file):
     download_file(url, output_file)
 
 def drop_enade_table(db_con, sql_table, sql_schema="public"):
-    sql_query = f"DROP TABLE {sql_schema}.{sql_table};"
-    db_con.execute(sql_query)
+    db_con.execute(f"DROP TABLE {sql_schema}.{sql_table};")
 
-def load_enade(zip_file_name, db_con, sql_table, sql_schema="public"):
+def list_column_names(db_con, sql_table, sql_schema="public"):
+    res = pd.read_sql(f"SELECT * FROM {sql_schema}.{sql_table} LIMIT 0;", db_con)
+    return(res.columns)
+
+def add_table_columns(cols, db_con, sql_table, sql_schema="public"):
+    add_cols = ", ".join(["ADD COLUMN {}".format(x) for x in cols])
+    db_con.execute(f"ALTER TABLE IF EXISTS {sql_schema}.{sql_table} {add_cols};")
+
+def open_csv_file_from_zip(zip_file_name):
     zip_file = ZipFile(zip_file_name, "r")
     csv_file_name = [name for name in zip_file.namelist() if name.endswith('.txt')][0]
-    csv_file = zip_file.open(csv_file_name)
+    return(zip_file.open(csv_file_name))
 
+def load_enade(zip_file_name, db_con, sql_table, sql_schema="public"):
+    csv_file = open_csv_file_from_zip(zip_file_name)
+    cur_cols = list_column_names(db_con, sql_table, sql_schema)
     for df in pd.read_csv(csv_file, delimiter = ";", chunksize=10000):
+        new_cols = cur_cols.difference(df.columns)
+        if new_cols:
+            add_table_columns(new_cols, db_con, sql_table, sql_schema)
         df.to_sql(
             sql_table, 
             db_con,
             sql_schema,
             index=False,
-            if_exists='append' # if the table already exists, append this data
+            if_exists='append'
         )
 
 
@@ -59,10 +72,8 @@ def main(args):
     )
     sql_table = "microdados_enade"
     sql_schema = "enade"
-
     db_con = connect_db(db_url)
     drop_enade_table(db_con, sql_table, sql_schema)
-    
     for year, url in enade_urls.items():
        output_file = os.path.join(output_dir, f"microdados_enade_{year}.zip")
        download_enade(url, output_file)
