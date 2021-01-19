@@ -43,13 +43,10 @@ def load_enade(zip_file_name, db_con, sql_table, sql_schema="public"):
 
 def main(args):
     output_dir = "data"
-    db_url = "postgresql://{}:{}@{}:{}/{}".format(
-        os.getenv("POSTGRES_USER"),
-        os.getenv("POSTGRES_PWD"),
-        os.getenv("POSTGRES_HOST"),
-        os.getenv("POSTGRES_PORT"),
-        os.getenv("POSTGRES_DB")
-    )
+    db_url = utils.build_db_url("postgresql", os.getenv("POSTGRES_USER"), os.getenv("POSTGRES_PWD"),
+                                os.getenv("POSTGRES_HOST"), os.getenv("POSTGRES_PORT"),
+                                os.getenv("POSTGRES_DB"))
+    
     sql_table = "microdados_enade"
     sql_schema = "enade"
     db_con = utils.connect_db(db_url)

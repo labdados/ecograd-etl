@@ -1,6 +1,8 @@
 import os
 import pandas as pd
 import sys
+import unidecode
+
 import urllib.request
 from sqlalchemy import create_engine
 from zipfile import ZipFile
@@ -8,6 +10,16 @@ from zipfile import ZipFile
 def add_db_table_columns(cols, col_type, db_con, sql_table, sql_schema="public"):
     add_cols = ", ".join(["ADD COLUMN {} {}".format(col, col_type) for col in cols])
     db_con.execute(f"ALTER TABLE IF EXISTS {sql_schema}.{sql_table} {add_cols};")
+
+def build_db_url(db, user, password, host, port, db_name):
+    return("{}://{}:{}@{}:{}/{}".format(db, user, password, host, port, db_name))
+
+def clean_col_names(columns):
+    return(columns.str.strip().str.lower().str.replace(' ', '_').str.replace('(', '').str.replace(')', ''))
+
+def create_db_schema(db_con, sql_schema):
+    print(f"Creating schema {sql_schema}")
+    db_con.execute(f"CREATE SCHEMA IF NOT EXISTS {sql_schema};")
 
 def connect_db(db_url):
     print("Connecting to database")
