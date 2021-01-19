@@ -1,4 +1,5 @@
 import pandas as pd
+import re
 import sys
 import urllib.request
 from sqlalchemy import create_engine
@@ -10,6 +11,18 @@ def add_db_table_columns(cols, col_type, db_con, sql_table, sql_schema="public")
 
 def build_db_url(db, user, password, host, port, db_name):
     return("{}://{}:{}@{}:{}/{}".format(db, user, password, host, port, db_name))
+
+def clean_col_name(col):
+    FIXES = [(r"[ /:\º,?()\.-]", "_"), (r"['’]", ""), (r"\_+", "_")]
+    col_name = str(col).upper()
+    for search, replace in FIXES:
+        col_name = re.sub(search, replace, col_name)  # noqa: PD005
+    "".join(item for item in str(col_name) if item.isalnum() or "_" in item)
+    col_name = col_name.strip("_")
+    return col_name
+
+def clean_col_names(cols):
+    return [clean_col_name(col) for col in cols]
 
 def create_db_schema(db_con, sql_schema):
     print(f"Creating schema {sql_schema}")

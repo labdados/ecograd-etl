@@ -1,5 +1,4 @@
 from dotenv import load_dotenv
-from janitor import clean_names
 import utils
 import os
 import pandas as pd
@@ -28,7 +27,8 @@ def download_indicadores(url, output_file):
 def load_indicadores(csv_file, db_con, sql_table, sql_schema="public"):
     print(f"Loading {csv_file} to {sql_schema}.{sql_table}")
     #cur_cols = utils.list_db_column_names(db_con, sql_table, sql_schema)
-    df = pd.read_csv(csv_file, delimiter = ";", low_memory=False, encoding="latin1").clean_names()
+    df = pd.read_csv(csv_file, delimiter = ";", low_memory=False, encoding="latin1")
+    df.columns = utils.clean_col_names(df.columns)
     print(df)
     df.to_sql(sql_table, db_con, sql_schema, index=False, if_exists='append')
 
