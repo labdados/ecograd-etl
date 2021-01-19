@@ -1,6 +1,7 @@
 import pandas as pd
 import re
 import sys
+import unicodedata
 import urllib.request
 from sqlalchemy import create_engine
 from zipfile import ZipFile
@@ -17,7 +18,14 @@ def clean_col_name(col):
     col_name = str(col).upper()
     for search, replace in FIXES:
         col_name = re.sub(search, replace, col_name)  # noqa: PD005
-    "".join(item for item in str(col_name) if item.isalnum() or "_" in item)
+    
+    col_name = "".join(item for item in str(col_name) if item.isalnum() or "_" in item)
+    col_name = "".join(
+        letter
+        for letter in unicodedata.normalize("NFD", col_name)
+        if not unicodedata.combining(letter)
+    )
+    
     col_name = col_name.strip("_")
     return col_name
 
