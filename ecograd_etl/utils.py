@@ -6,7 +6,7 @@ from sqlalchemy import create_engine
 from zipfile import ZipFile
 
 def add_db_table_columns(cols, col_type, db_con, sql_table, sql_schema="public"):
-    add_cols = ", ".join(["ADD COLUMN {} {}".format(col, col_type) for col in cols])
+    add_cols = ", ".join(['ADD COLUMN "{}" {}'.format(col, col_type) for col in cols])
     db_con.execute(f"ALTER TABLE IF EXISTS {sql_schema}.{sql_table} {add_cols};")
 
 def connect_db(db_url):

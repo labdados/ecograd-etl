@@ -2,6 +2,7 @@ from dotenv import load_dotenv
 import utils
 import os
 import pandas as pd
+import sqlalchemy
 import sys
 from zipfile import ZipFile
 
@@ -22,7 +23,7 @@ enade_urls = {
 
 def download_enade(url, output_file):
     print(f"Downloading {url} to {output_file}")
-    utils.download_file(url, output_file)
+    #utils.download_file(url, output_file)
 
 def load_enade(zip_file_name, db_con, sql_table, sql_schema="public"):
     print(f"Loading {zip_file_name} to {sql_schema}.{sql_table}")
@@ -32,13 +33,14 @@ def load_enade(zip_file_name, db_con, sql_table, sql_schema="public"):
         new_cols = df.columns.difference(cur_cols)
         if not cur_cols.empty and not new_cols.empty:
             print(f"New columns found: {new_cols}")
-            utils.add_db_table_columns(new_cols, "double precision", db_con, sql_table, sql_schema)
+            utils.add_db_table_columns(new_cols, "text", db_con, sql_table, sql_schema)
         df.to_sql(
             sql_table, 
             db_con,
             sql_schema,
             index=False,
-            if_exists='append'
+            if_exists='append',
+            dtype=sqlalchemy.types.Text
         )
 
 def main(args):
