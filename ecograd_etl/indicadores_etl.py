@@ -31,6 +31,11 @@ def load_indicadores(csv_file, db_con, sql_table, sql_schema="public"):
     df = df.loc[:, ~df.columns.str.contains('^Unnamed')]
     df.columns = utils.clean_col_names(df.columns)
     print(df)
+    cur_cols = utils.list_db_column_names(db_con, sql_table, sql_schema)
+    new_cols = df.columns.difference(cur_cols)
+    if not cur_cols.empty and not new_cols.empty:
+        print(f"New columns found: {new_cols}")
+        utils.add_db_table_columns(new_cols, "text", db_con, sql_table, sql_schema)
     df.to_sql(sql_table, db_con, sql_schema, index=False, if_exists='append')
 
 def main(args):
