@@ -1,8 +1,5 @@
-import os
 import pandas as pd
 import sys
-import unidecode
-
 import urllib.request
 from sqlalchemy import create_engine
 from zipfile import ZipFile
@@ -13,9 +10,6 @@ def add_db_table_columns(cols, col_type, db_con, sql_table, sql_schema="public")
 
 def build_db_url(db, user, password, host, port, db_name):
     return("{}://{}:{}@{}:{}/{}".format(db, user, password, host, port, db_name))
-
-def clean_col_names(columns):
-    return(columns.str.strip().str.lower().str.replace(' ', '_').str.replace('(', '').str.replace(')', ''))
 
 def create_db_schema(db_con, sql_schema):
     print(f"Creating schema {sql_schema}")
@@ -28,7 +22,6 @@ def connect_db(db_url):
 
 def download_file(url, output_file):
     output_filename = url.split('/')[-1]
-    #output_path = os.path.join(output_dir, output_filename)
     urllib.request.urlretrieve(url, filename=output_file)
 
 def drop_db_table(db_con, sql_table, sql_schema="public"):
