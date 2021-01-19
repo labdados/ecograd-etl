@@ -23,7 +23,7 @@ enade_urls = {
 
 def download_enade(url, output_file):
     print(f"Downloading {url} to {output_file}")
-    #utils.download_file(url, output_file)
+    utils.download_file(url, output_file)
 
 def load_enade(zip_file_name, db_con, sql_table, sql_schema="public"):
     print(f"Loading {zip_file_name} to {sql_schema}.{sql_table}")
