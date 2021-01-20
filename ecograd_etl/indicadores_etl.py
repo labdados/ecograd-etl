@@ -67,8 +67,8 @@ ind_na_values = [
     "Resultado desconsiderado devido à Política de Transferência Assistida (Portaria MEC nº 24/2016)"
 ]
 
-ind_dtypes = {
-    "CODIGO_DO_CURSO": "str"
+sql_dtypes = {
+    "CODIGO_DO_CURSO": sqlalchemy.types.Text
 }
 
 def download_indicadores(url, output_file):
@@ -82,7 +82,7 @@ def parse_x(x):
 def load_indicadores(csv_file, db_con, sql_table, sql_schema="public", cols_to_rename=None):
     print(f"Loading {csv_file} to {sql_schema}.{sql_table}")
     df = pd.read_csv(csv_file, delimiter = ";", low_memory=False, encoding="latin1", decimal=",",
-                     na_values=ind_na_values, dtype=ind_dtypes)
+                     na_values=ind_na_values)
     df = df.loc[:, ~df.columns.str.contains('^Unnamed')]
     df.columns = utils.clean_col_names(df.columns)
     if cols_to_rename:
