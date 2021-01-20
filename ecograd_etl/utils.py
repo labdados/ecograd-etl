@@ -18,14 +18,12 @@ def clean_col_name(col):
     col_name = str(col).upper()
     for search, replace in FIXES:
         col_name = re.sub(search, replace, col_name)  # noqa: PD005
-    
     col_name = "".join(item for item in str(col_name) if item.isalnum() or "_" in item)
     col_name = "".join(
         letter
         for letter in unicodedata.normalize("NFD", col_name)
         if not unicodedata.combining(letter)
     )
-    
     col_name = re.sub("_+", "_", col_name)
     col_name = col_name.strip("_")
     return col_name
@@ -52,7 +50,6 @@ def drop_db_table(db_con, sql_table, sql_schema="public"):
 
 def filter_dict_by_keys(my_dict, keys):
     return {k: my_dict[k] for k in keys if k in my_dict}
-
 
 def list_db_column_names(db_con, sql_table, sql_schema="public"):
     try:
