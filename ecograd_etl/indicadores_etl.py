@@ -46,7 +46,7 @@ indicadores_enade = {
     }
 }
 
-na_values = ["",
+na_values = ["", "-",
              "Resultado desconsiderado devido à Política de Transferência Assistida (Portaria MEC nº 24/2016)"]
 
 def download_indicadores(url, output_file):
@@ -55,7 +55,6 @@ def download_indicadores(url, output_file):
 
 def load_indicadores(csv_file, db_con, sql_table, sql_schema="public", cols_to_rename=None):
     print(f"Loading {csv_file} to {sql_schema}.{sql_table}")
-    #cur_cols = utils.list_db_column_names(db_con, sql_table, sql_schema)
     df = pd.read_csv(csv_file, delimiter = ";", low_memory=False, encoding="latin1", decimal=",",
                      na_values=na_values)
     df = df.loc[:, ~df.columns.str.contains('^Unnamed')]
