@@ -18,7 +18,12 @@ indicadores_enade = {
         "url": "https://download.inep.gov.br/educacao_superior/indicadores/legislacao/2018/resultados_conceito_enade_2017.csv"
     },
     2016: {
-        "url": "https://download.inep.gov.br/educacao_superior/indicadores/legislacao/2017/resultado_enade2016_portal_06_09_2017.csv"
+        "url": "https://download.inep.gov.br/educacao_superior/indicadores/legislacao/2017/resultado_enade2016_portal_06_09_2017.csv",
+        "rename_columns": {
+            "AREA_DE_ENQUADRAMENTO": "AREA_DE_AVALIACAO",
+            "CONCLUINTES_INSCRITOS": "N_DE_CONCLUINTES_INSCRITOS",
+            "CONCLUINTES_PARTICIPANTES": "N_DE_CONCLUINTES_PARTICIPANTES"
+        }
     },
     2015: {
         "url": "https://download.inep.gov.br/educacao_superior/indicadores/legislacao/2017/conceito_enade_2015_portal_atualizado_03_10_2017.csv"
@@ -44,13 +49,15 @@ def download_indicadores(url, output_file):
     print(f"Downloading {url} to {output_file}")
     utils.download_file(url, output_file)
 
-def load_indicadores(csv_file, db_con, sql_table, sql_schema="public"):
+def load_indicadores(csv_file, db_con, sql_table, sql_schema="public", cols_to_rename=None):
     print(f"Loading {csv_file} to {sql_schema}.{sql_table}")
     #cur_cols = utils.list_db_column_names(db_con, sql_table, sql_schema)
     df = pd.read_csv(csv_file, delimiter = ";", low_memory=False, encoding="latin1", decimal=",",
                      thousands=".")
     df = df.loc[:, ~df.columns.str.contains('^Unnamed')]
     df.columns = utils.clean_col_names(df.columns)
+    if cols_to_rename:
+        df.rename(cols_to_rename, inplace=True)
     print(df.columns)
     cur_cols = utils.list_db_column_names(db_con, sql_table, sql_schema)
     new_cols = df.columns.difference(cur_cols)
@@ -72,7 +79,8 @@ def main(args):
     for year, item in indicadores_enade.items():
        csv_file = os.path.join(output_dir, f"conceito_enade_{year}.csv")
        download_indicadores(item["url"], csv_file)
-       load_indicadores(csv_file, db_con, sql_table, sql_schema)
+       cols_to_rename = item["rename_columns"] if "rename_columns" in item else None
+       load_indicadores(csv_file, db_con, sql_table, sql_schema, cols_to_rename)
 
 if __name__ == '__main__':
     main(sys.argv[1:])
