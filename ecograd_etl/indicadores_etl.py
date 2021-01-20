@@ -75,10 +75,6 @@ def download_indicadores(url, output_file):
     print(f"Downloading {url} to {output_file}")
     utils.download_file(url, output_file)
 
-def parse_x(x):
-    print(x)
-    return float(x.replace(",", "."))
-
 def load_indicadores(csv_file, db_con, sql_table, sql_schema="public", cols_to_rename=None):
     print(f"Loading {csv_file} to {sql_schema}.{sql_table}")
     df = pd.read_csv(csv_file, delimiter = ";", low_memory=False, encoding="latin1", decimal=",",
@@ -94,7 +90,8 @@ def load_indicadores(csv_file, db_con, sql_table, sql_schema="public", cols_to_r
     if not cur_cols.empty and not new_cols.empty:
         print(f"New columns found: {new_cols}")
         utils.add_db_table_columns(new_cols, "text", db_con, sql_table, sql_schema)
-    df.to_sql(sql_table, db_con, sql_schema, index=False, if_exists='append')
+    df.to_sql(sql_table, db_con, sql_schema, index=False, if_exists='append',
+              dtype=sql_dtypes)
 
 def main(args):
     output_dir = "data"
