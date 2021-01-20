@@ -15,7 +15,7 @@ def build_db_url(db, user, password, host, port, db_name):
 
 def clean_col_name(col):
     FIXES = [(r"[ /:\º,?()\.-]", "_"), (r"['’]", "")]
-    col_name = str(col).upper()
+    col_name = str(col).lower()
     for search, replace in FIXES:
         col_name = re.sub(search, replace, col_name)  # noqa: PD005
     col_name = "".join(item for item in str(col_name) if item.isalnum() or "_" in item)
