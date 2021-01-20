@@ -8,7 +8,7 @@ from zipfile import ZipFile
 
 load_dotenv()
 
-ind_enade = {
+enade_url = {
     2019: {
         "url": "https://download.inep.gov.br/educacao_superior/indicadores/resultados/2019/Conceito_Enade_2019.csv"
     },
@@ -41,7 +41,7 @@ ind_enade = {
     }
 }
 
-ind_rename_columns = {
+rename_columns = {
     "AREA": "AREA_DE_AVALIACAO",
     "AREA_DE_ENQUADRAMENTO": "AREA_DE_AVALIACAO",
     "CATEG_ADMINISTRATIVA": "CATEGORIA_ADMINISTRATIVA",
@@ -62,7 +62,7 @@ ind_rename_columns = {
     "UF_DO_CURSO": "SIGLA_DA_UF"
 }
 
-ind_na_values = [
+na_values = [
     "", "-", ".",
     "Resultado desconsiderado devido à Política de Transferência Assistida (Portaria MEC nº 24/2016)"
 ]
@@ -75,12 +75,13 @@ def download_indicadores(url, output_file):
     print(f"Downloading {url} to {output_file}")
     utils.download_file(url, output_file)
 
-def load_indicadores(csv_file, db_con, sql_table, sql_schema="public", cols_to_rename=None):
+def load_indicadores(csv_file, db_con, sql_table, sql_schema="public"):
     print(f"Loading {csv_file} to {sql_schema}.{sql_table}")
     df = pd.read_csv(csv_file, delimiter = ";", low_memory=False, encoding="latin1", decimal=",",
-                     na_values=ind_na_values)
+                     na_values=na_values)
     df = df.loc[:, ~df.columns.str.contains('^Unnamed')]
     df.columns = utils.clean_col_names(df.columns)
+    cols_to_rename = utils.filter_dict_by_keys(rename_columns, df.columns)
     if cols_to_rename:
         print(f"Renaming columns: {cols_to_rename}")
         df.rename(columns=cols_to_rename, inplace=True)
@@ -103,11 +104,10 @@ def main(args):
     db_con = utils.connect_db(db_url)
     utils.create_db_schema(db_con, sql_schema)
     utils.drop_db_table(db_con, sql_table, sql_schema)
-    for year, item in ind_enade.items():
+    for year, item in enade_url.items():
        csv_file = os.path.join(output_dir, f"conceito_enade_{year}.csv")
        download_indicadores(item["url"], csv_file)
-       #cols_to_rename = item["rename_columns"] if "rename_columns" in item else None
-       load_indicadores(csv_file, db_con, sql_table, sql_schema, ind_rename_columns)
+       load_indicadores(csv_file, db_con, sql_table, sql_schema)
 
 if __name__ == '__main__':
     main(sys.argv[1:])

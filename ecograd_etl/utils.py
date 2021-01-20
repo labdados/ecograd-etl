@@ -50,6 +50,10 @@ def drop_db_table(db_con, sql_table, sql_schema="public"):
     print(f"Dropping table {sql_schema}.{sql_table}")
     db_con.execute(f"DROP TABLE IF EXISTS {sql_schema}.{sql_table};")
 
+def filter_dict_by_keys(my_dict, keys):
+    return {k: my_dict[k] for k in keys if k in my_dict}
+
+
 def list_db_column_names(db_con, sql_table, sql_schema="public"):
     try:
         res = pd.read_sql(f"SELECT * FROM {sql_schema}.{sql_table} LIMIT 0;", db_con)
