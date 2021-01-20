@@ -100,7 +100,7 @@ def extract_indicadores(csv_file, **kwargs):
 
 def transform_indicadores(df, year):
     df = df.loc[:, ~df.columns.str.contains('^Unnamed')]
-    df.drop_na(how = "all", inplace=True)
+    df.dropna(how = "all", inplace=True)
     df.columns = utils.clean_col_names(df.columns)
     cols_to_rename = utils.filter_dict_by_keys(rename_columns, df.columns)
     if cols_to_rename:
