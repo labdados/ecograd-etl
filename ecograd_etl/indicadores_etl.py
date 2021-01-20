@@ -57,6 +57,7 @@ def load_indicadores(csv_file, db_con, sql_table, sql_schema="public", cols_to_r
     df = df.loc[:, ~df.columns.str.contains('^Unnamed')]
     df.columns = utils.clean_col_names(df.columns)
     if cols_to_rename:
+        print(f"Renaming columns: {cols_to_rename}")
         df.rename(cols_to_rename, inplace=True)
     print(df.columns)
     cur_cols = utils.list_db_column_names(db_con, sql_table, sql_schema)
