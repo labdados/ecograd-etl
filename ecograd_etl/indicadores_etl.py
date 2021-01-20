@@ -42,16 +42,20 @@ indicadores_enade = {
         "url": "https://download.inep.gov.br/educacao_superior/enade/planilhas/2011/tabela_enade_cpc_2011_retificado_08_02_13.csv",
     },
     2010: {
-        "https://download.inep.gov.br/educacao_superior/enade/planilhas/2010/tabela_enade_cpc_2010.csv"
+        "url": "https://download.inep.gov.br/educacao_superior/enade/planilhas/2010/tabela_enade_cpc_2010.csv"
     }
 }
 
-na_values = ["", "-",
+na_values = ["", "-", ".",
              "Resultado desconsiderado devido à Política de Transferência Assistida (Portaria MEC nº 24/2016)"]
 
 def download_indicadores(url, output_file):
     print(f"Downloading {url} to {output_file}")
     utils.download_file(url, output_file)
+
+def parse_x(x):
+    print(x)
+    return float(x.replace(",", "."))
 
 def load_indicadores(csv_file, db_con, sql_table, sql_schema="public", cols_to_rename=None):
     print(f"Loading {csv_file} to {sql_schema}.{sql_table}")
