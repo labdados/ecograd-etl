@@ -30,7 +30,7 @@ def load_indicadores(csv_file, db_con, sql_table, sql_schema="public"):
     df = pd.read_csv(csv_file, delimiter = ";", low_memory=False, encoding="latin1", decimal=",")
     df = df.loc[:, ~df.columns.str.contains('^Unnamed')]
     df.columns = utils.clean_col_names(df.columns)
-    print(df)
+    print(df.columns)
     cur_cols = utils.list_db_column_names(db_con, sql_table, sql_schema)
     new_cols = df.columns.difference(cur_cols)
     if not cur_cols.empty and not new_cols.empty:
