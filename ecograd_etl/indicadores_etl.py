@@ -83,6 +83,12 @@ sql_dtypes = {
     "CODIGO_DO_CURSO": sqlalchemy.types.Text
 }
 
+def setup_db(db_url, sql_table, sql_schema):
+    db_con = utils.connect_db(db_url)
+    utils.create_db_schema(db_con, sql_schema)
+    utils.drop_db_table(db_con, sql_table, sql_schema)
+    return db_con
+
 def download_indicadores(url, output_file):
     print(f"Downloading {url} to {output_file}")
     utils.download_file(url, output_file)
@@ -101,11 +107,8 @@ def transform_indicadores(df):
         df.rename(columns=cols_to_rename, inplace=True)
     return df
 
-def load_indicadores(df, csv_file, db_url, sql_table, sql_schema="public"):
+def load_indicadores(df, csv_file, db_con, sql_table, sql_schema):
     print(f"Loading {csv_file} to {sql_schema}.{sql_table}")
-    db_con = utils.connect_db(db_url)
-    utils.create_db_schema(db_con, sql_schema)
-    utils.drop_db_table(db_con, sql_table, sql_schema)
     cur_cols = utils.list_db_column_names(db_con, sql_table, sql_schema)
     new_cols = df.columns.difference(cur_cols)
     if not cur_cols.empty and not new_cols.empty:
@@ -114,15 +117,17 @@ def load_indicadores(df, csv_file, db_url, sql_table, sql_schema="public"):
     df.to_sql(sql_table, db_con, sql_schema, index=False, if_exists='append',
               dtype=sql_dtypes)
 
-def etl_indicadores(year, db_url, sql_table, sql_schema="public", data_dir="data"):
-    conf = enade_conf[year]
-    csv_file = os.path.join(data_dir, f"conceito_enade_{year}.csv")
-    download_indicadores(conf["url"], csv_file)
-    extract_kwargs = conf["extract_kwargs"] if "extract_kwargs" in conf else {}
-    df = extract_indicadores(csv_file, **extract_kwargs)
-    df = transform_indicadores(df)
-    print(df.columns)
-    load_indicadores(df, csv_file, db_url, sql_table, sql_schema)
+def etl_indicadores(years, db_url, sql_table, sql_schema, data_dir="data"):
+    db_con = setup_db(db_url, sql_table, sql_schema)
+    for year in years:
+        conf = enade_conf[year]
+        csv_file = os.path.join(data_dir, f"conceito_enade_{year}.csv")
+        download_indicadores(conf["url"], csv_file)
+        extract_kwargs = conf["extract_kwargs"] if "extract_kwargs" in conf else {}
+        df = extract_indicadores(csv_file, **extract_kwargs)
+        df = transform_indicadores(df)
+        print(df.columns)
+        load_indicadores(df, csv_file, db_con, sql_table, sql_schema)
 
 def main(args):
     years = enade_conf.keys() if len(args) == 0 else args
@@ -133,8 +138,7 @@ def main(args):
     )
     sql_table = "enade"
     sql_schema = "indicadores"
-    for year in years:
-       etl_indicadores(year, db_url, sql_table, sql_schema, data_dir)
+    etl_indicadores(years, db_url, sql_table, sql_schema, data_dir)
 
 if __name__ == '__main__':
     main(sys.argv[1:])
