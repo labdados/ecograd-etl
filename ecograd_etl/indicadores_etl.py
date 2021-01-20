@@ -46,6 +46,27 @@ indicadores_enade = {
     }
 }
 
+rename_columns = {
+    "AREA": "AREA_DE_AVALIACAO",
+    "AREA_DE_ENQUADRAMENTO": "AREA_DE_AVALIACAO",
+    "CATEG_ADMINISTRATIVA": "CATEGORIA_ADMINISTRATIVA",
+    "COD_AREA": "CODIGO_DA_AREA",
+    "COD_CURSOS_DA_UNIDADE": "CODIGO_DO_CURSO",
+    "COD_IES": "CODIGO_DA_IES",
+    "COD_MUNICIPIO": "CODIGO_DO_MUNICIPIO",
+    "CONCEITO_ENADE": "CONCEITO_ENADE_FAIXA",
+    "CONCLUINTES_INSCRITOS": "N_DE_CONCLUINTES_INSCRITOS",
+    "CONCLUINTES_PARTICIPANTES": "N_DE_CONCLUINTES_PARTICIPANTES",
+    "CONLUINTES_INSCRITOS": "N_DE_CONCLUINTES_INSCRITOS",
+    "INSCRITOS": "N_DE_CONCLUINTES_INSCRITOS",
+    "NOME_DO_MUNICIPIO": "MUNICIPIO_DO_CURSO",
+    "NOTA_CONTINUA_DO_ENADE": "CONCEITO_ENADE_CONTINUO",
+    "OBS": "OBSERVACAO",
+    "ORG_ACADEMICA": "ORGANIZACAO_ACADEMICA",
+    "PARTICIPANTES": "N_DE_CONCLUINTES_PARTICIPANTES",
+    "UF_DO_CURSO": "SIGLA_DA_UF"
+}
+
 na_values = ["", "-", ".",
              "Resultado desconsiderado devido à Política de Transferência Assistida (Portaria MEC nº 24/2016)"]
 
@@ -87,8 +108,8 @@ def main(args):
     for year, item in indicadores_enade.items():
        csv_file = os.path.join(output_dir, f"conceito_enade_{year}.csv")
        download_indicadores(item["url"], csv_file)
-       cols_to_rename = item["rename_columns"] if "rename_columns" in item else None
-       load_indicadores(csv_file, db_con, sql_table, sql_schema, cols_to_rename)
+       #cols_to_rename = item["rename_columns"] if "rename_columns" in item else None
+       load_indicadores(csv_file, db_con, sql_table, sql_schema, rename_columns)
 
 if __name__ == '__main__':
     main(sys.argv[1:])
