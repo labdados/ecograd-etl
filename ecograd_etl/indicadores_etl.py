@@ -8,7 +8,7 @@ from zipfile import ZipFile
 
 load_dotenv()
 
-indicadores_enade = {
+ind_enade = {
     2019: {
         "url": "https://download.inep.gov.br/educacao_superior/indicadores/resultados/2019/Conceito_Enade_2019.csv"
     },
@@ -20,11 +20,6 @@ indicadores_enade = {
     },
     2016: {
         "url": "https://download.inep.gov.br/educacao_superior/indicadores/legislacao/2017/resultado_enade2016_portal_06_09_2017.csv",
-        "rename_columns": {
-            "AREA_DE_ENQUADRAMENTO": "AREA_DE_AVALIACAO",
-            "CONCLUINTES_INSCRITOS": "N_DE_CONCLUINTES_INSCRITOS",
-            "CONCLUINTES_PARTICIPANTES": "N_DE_CONCLUINTES_PARTICIPANTES"
-        }
     },
     2015: {
         "url": "https://download.inep.gov.br/educacao_superior/indicadores/legislacao/2017/conceito_enade_2015_portal_atualizado_03_10_2017.csv"
@@ -46,7 +41,7 @@ indicadores_enade = {
     }
 }
 
-rename_columns = {
+ind_rename_columns = {
     "AREA": "AREA_DE_AVALIACAO",
     "AREA_DE_ENQUADRAMENTO": "AREA_DE_AVALIACAO",
     "CATEG_ADMINISTRATIVA": "CATEGORIA_ADMINISTRATIVA",
@@ -67,8 +62,14 @@ rename_columns = {
     "UF_DO_CURSO": "SIGLA_DA_UF"
 }
 
-na_values = ["", "-", ".",
-             "Resultado desconsiderado devido à Política de Transferência Assistida (Portaria MEC nº 24/2016)"]
+ind_na_values = [
+    "", "-", ".",
+    "Resultado desconsiderado devido à Política de Transferência Assistida (Portaria MEC nº 24/2016)"
+]
+
+ind_dtypes = {
+    "CODIGO_DO_CURSO": "str"
+}
 
 def download_indicadores(url, output_file):
     print(f"Downloading {url} to {output_file}")
@@ -81,7 +82,7 @@ def parse_x(x):
 def load_indicadores(csv_file, db_con, sql_table, sql_schema="public", cols_to_rename=None):
     print(f"Loading {csv_file} to {sql_schema}.{sql_table}")
     df = pd.read_csv(csv_file, delimiter = ";", low_memory=False, encoding="latin1", decimal=",",
-                     na_values=na_values)
+                     na_values=ind_na_values, dtype=ind_dtypes)
     df = df.loc[:, ~df.columns.str.contains('^Unnamed')]
     df.columns = utils.clean_col_names(df.columns)
     if cols_to_rename:
@@ -105,11 +106,11 @@ def main(args):
     db_con = utils.connect_db(db_url)
     utils.create_db_schema(db_con, sql_schema)
     utils.drop_db_table(db_con, sql_table, sql_schema)
-    for year, item in indicadores_enade.items():
+    for year, item in ind_enade.items():
        csv_file = os.path.join(output_dir, f"conceito_enade_{year}.csv")
        download_indicadores(item["url"], csv_file)
        #cols_to_rename = item["rename_columns"] if "rename_columns" in item else None
-       load_indicadores(csv_file, db_con, sql_table, sql_schema, rename_columns)
+       load_indicadores(csv_file, db_con, sql_table, sql_schema, ind_rename_columns)
 
 if __name__ == '__main__':
     main(sys.argv[1:])
