@@ -98,13 +98,16 @@ def extract_indicadores(csv_file, **kwargs):
                        encoding="latin1", decimal=",", na_values=na_values,
                        **kwargs)
 
-def transform_indicadores(df):
+def transform_indicadores(df, year):
     df = df.loc[:, ~df.columns.str.contains('^Unnamed')]
+    df.drop_na(how = "all", inplace=True)
     df.columns = utils.clean_col_names(df.columns)
     cols_to_rename = utils.filter_dict_by_keys(rename_columns, df.columns)
     if cols_to_rename:
         print(f"Renaming columns: {cols_to_rename}")
         df.rename(columns=cols_to_rename, inplace=True)
+    if 'ano' not in df.columns:
+        df['ano'] = year
     return df
 
 def load_indicadores(df, csv_file, db_con, sql_table, sql_schema):
@@ -125,7 +128,7 @@ def etl_indicadores(years, db_url, sql_table, sql_schema, data_dir="data"):
         download_indicadores(conf["url"], csv_file)
         extract_kwargs = conf["extract_kwargs"] if "extract_kwargs" in conf else {}
         df = extract_indicadores(csv_file, **extract_kwargs)
-        df = transform_indicadores(df)
+        df = transform_indicadores(df, year)
         print(df.columns)
         load_indicadores(df, csv_file, db_con, sql_table, sql_schema)
 
