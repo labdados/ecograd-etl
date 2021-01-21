@@ -79,6 +79,23 @@ na_values = [
     "Resultado desconsiderado devido à Política de Transferência Assistida (Portaria MEC nº 24/2016)"
 ]
 
+replace_values = {
+    "categoria_administrativa": {
+        "Pessoa Jurídica de Direito Público - Federal": "Pública Federal",
+        "Pessoa Jurídica de Direito Privado - Com fins lucrativos - Sociedade Civil": "Privada com fins lucrativos",
+        "Pessoa Jurídica de Direito Público - Estadual": "Pública Estadual",
+        "Pessoa Jurídica de Direito Privado - Sem fins lucrativos - Associação de Utilidade Pública": "Privada sem fins lucrativos",
+        "Federal": "Pública Federal",
+        "Estadual": "Pública Estadual",
+        "Pessoa Jurídica de Direito Privado - Sem fins lucrativos - Fundação": "Privada sem fins lucrativos",
+        "Pessoa Jurídica de Direito Público - Municipal": "Pública Municipal",
+        "Pessoa Jurídica de Direito Privado - Com fins lucrativos - Sociedade Mercantil ou Comercial": "Privada com fins lucrativos",
+        "Pessoa Jurídica de Direito Privado - Sem fins lucrativos - Sociedade": "Privada sem fins lucrativos",
+        "Fundação Pública de Direito Privado Municipal": "Privada sem fins lucrativos",
+        "Administração pública em geral": "Pública Municipal"
+    }
+}
+
 sql_dtypes = {
     "codigo_do_curso": sqlalchemy.types.Text
 }
@@ -109,6 +126,7 @@ def transform_indicadores(df, year):
         df.rename(columns=cols_to_rename, inplace=True)
     if 'ano' not in df.columns:
         df['ano'] = year
+    df.replace(replace_values)
     return df
 
 def load_indicadores(df, csv_file, db_con, sql_table, sql_schema):
