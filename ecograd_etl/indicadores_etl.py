@@ -29,49 +29,49 @@ enade_conf = {
     },
     "2013": {
         "url": "https://download.inep.gov.br/educacao_superior/enade/planilhas/2013/conceito_enade_2013.csv"
-    },
-    "2012": {
-        "url": "https://download.inep.gov.br/educacao_superior/enade/planilhas/2012/conceito_enade_2012.csv",
-        "extract_kwargs": {
-            "skiprows": 1
-        }
-    },
-    "2011": {
-        "url": "https://download.inep.gov.br/educacao_superior/enade/planilhas/2011/tabela_enade_cpc_2011_retificado_08_02_13.csv",
-    },
-    "2010": {
-        "url": "https://download.inep.gov.br/educacao_superior/enade/planilhas/2010/tabela_enade_cpc_2010.csv"
-    }
+    }#,
+    # "2012": {
+    #     "url": "https://download.inep.gov.br/educacao_superior/enade/planilhas/2012/conceito_enade_2012.csv",
+    #     "extract_kwargs": {
+    #         "skiprows": 1
+    #     }
+    # },
+    # "2011": {
+    #     "url": "https://download.inep.gov.br/educacao_superior/enade/planilhas/2011/tabela_enade_cpc_2011_retificado_08_02_13.csv",
+    # },
+    # "2010": {
+    #     "url": "https://download.inep.gov.br/educacao_superior/enade/planilhas/2010/tabela_enade_cpc_2010.csv"
+    # }
 }
 
 rename_columns = {
-    "ANO_ENADE": "ANO",
-    "AREA": "AREA_DE_AVALIACAO",
-    "AREA_DE_ENQUADRAMENTO": "AREA_DE_AVALIACAO",
-    "AREA_ENQUADRAMENTO": "AREA_DE_AVALIACAO",
-    "CATEG_ADMINISTRATIVA": "CATEGORIA_ADMINISTRATIVA",
-    "COD_AREA": "CODIGO_DA_AREA",
-    "COD_CURSOS_DA_UNIDADE": "CODIGO_DO_CURSO",
-    "COD_IES": "CODIGO_DA_IES",
-    "COD_MUNICIPIO": "CODIGO_DO_MUNICIPIO",
-    "CODIGO_AREA": "CODIGO_DA_AREA",
-    "CODIGO_IES": "CODIGO_DA_IES",
-    "CODIGO_MUNICIPIO": "CODIGO_DO_MUNICIPIO",
-    "CODIGO_UF": "SIGLA_DA_UF",
-    "CONCEITO_ENADE": "CONCEITO_ENADE_FAIXA",
-    "CONCLUINTES_INSCRITOS": "N_DE_CONCLUINTES_INSCRITOS",
-    "CONCLUINTES_PARTICIPANTES": "N_DE_CONCLUINTES_PARTICIPANTES",
-    "CONLUINTES_INSCRITOS": "N_DE_CONCLUINTES_INSCRITOS",
-    "IES": "NOME_DA_IES",
-    "INSCRITOS": "N_DE_CONCLUINTES_INSCRITOS",
-    "NOME_DO_MUNICIPIO": "MUNICIPIO_DO_CURSO",
-    "NOTA_CONTINUA_DO_ENADE": "CONCEITO_ENADE_CONTINUO",
-    "OBS": "OBSERVACAO",
-    "ORG_ACADEMICA": "ORGANIZACAO_ACADEMICA",
-    "PARTICIPANTES": "N_DE_CONCLUINTES_PARTICIPANTES",
-    "SIGLA_IES": "SIGLA_DA_IES",
-    "SIGLA_UF": "SIGLA_DA_UF",
-    "UF_DO_CURSO": "SIGLA_DA_UF"
+    "ano_enade": "ano",
+    "area": "area_de_avaliacao",
+    "area_de_enquadramento": "area_de_avaliacao",
+    "area_enquadramento": "area_de_avaliacao",
+    "categ_administrativa": "categoria_administrativa",
+    "cod_area": "codigo_da_area",
+    "cod_cursos_da_unidade": "codigo_do_curso",
+    "cod_ies": "codigo_da_ies",
+    "cod_municipio": "codigo_do_municipio",
+    "codigo_area": "codigo_da_area",
+    "codigo_ies": "codigo_da_ies",
+    "codigo_municipio": "codigo_do_municipio",
+    "codigo_uf": "sigla_da_uf",
+    "conceito_enade": "conceito_enade_faixa",
+    "concluintes_inscritos": "n_de_concluintes_inscritos",
+    "concluintes_participantes": "n_de_concluintes_participantes",
+    "conluintes_inscritos": "n_de_concluintes_inscritos",
+    "ies": "nome_da_ies",
+    "inscritos": "n_de_concluintes_inscritos",
+    "nome_do_municipio": "municipio_do_curso",
+    "nota_continua_do_enade": "conceito_enade_continuo",
+    "obs": "observacao",
+    "org_academica": "organizacao_academica",
+    "participantes": "n_de_concluintes_participantes",
+    "sigla_ies": "sigla_da_ies",
+    "sigla_uf": "sigla_da_uf",
+    "uf_do_curso": "sigla_da_uf"
 }
 
 na_values = [
