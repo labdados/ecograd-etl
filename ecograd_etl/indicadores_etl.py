@@ -80,7 +80,7 @@ na_values = [
 ]
 
 sql_dtypes = {
-    "CODIGO_DO_CURSO": sqlalchemy.types.Text
+    "codigo_do_curso": sqlalchemy.types.Text
 }
 
 def setup_db(db_url, sql_table, sql_schema):
