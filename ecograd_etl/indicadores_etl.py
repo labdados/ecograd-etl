@@ -62,7 +62,7 @@ enade_conf = {
     # }
 }
 
-rename_columns = {
+rename_columns_enade = {
     "ano_enade": "ano",
     "area": "area_de_avaliacao",
     "area_de_enquadramento": "area_de_avaliacao",
@@ -92,12 +92,20 @@ rename_columns = {
     "uf_do_curso": "sigla_da_uf"
 }
 
-na_values = [
+rename_columns_cpc = {
+
+}
+
+na_values_enade = [
     "", "-", ".",
     "Resultado desconsiderado devido à Política de Transferência Assistida (Portaria MEC nº 24/2016)"
 ]
 
-replace_values = {
+na_values_cpc = []
+
+replace_values_cpc = {}
+
+replace_values_enade = {
     "categoria_administrativa": {
         "Pessoa Jurídica de Direito Público - Federal": "Pública Federal",
         "Pessoa Jurídica de Direito Privado - Com fins lucrativos - Sociedade Civil": "Privada com fins lucrativos",
@@ -130,7 +138,7 @@ def download_indicadores(url, output_file):
 
 def extract_indicadores(csv_file, **kwargs):
     return pd.read_csv(csv_file, delimiter = ";", low_memory=False,
-                       encoding="latin1", decimal=",", na_values=na_values,
+                       encoding="latin1", decimal=",", na_values=na_values_cpc,
                        **kwargs)
 
 def transform_indicadores(df, year):
@@ -138,13 +146,13 @@ def transform_indicadores(df, year):
     df.dropna(axis = 1, how = "all", inplace=True)
     #df = df.loc[:, ~df.columns.str.contains('^Unnamed')]
     df.columns = utils.clean_col_names(df.columns)
-    cols_to_rename = utils.filter_dict_by_keys(rename_columns, df.columns)
+    cols_to_rename = utils.filter_dict_by_keys(rename_columns_cpc, df.columns)
     if cols_to_rename:
         print(f"Renaming columns: {cols_to_rename}")
         df.rename(columns=cols_to_rename, inplace=True)
     if 'ano' not in df.columns:
         df['ano'] = year
-    df.replace(replace_values, inplace=True)
+    df.replace(replace_values_cpc, inplace=True)
     return df
 
 def load_indicadores(df, csv_file, db_con, sql_table, sql_schema):
