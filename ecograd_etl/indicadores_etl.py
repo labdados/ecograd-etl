@@ -101,7 +101,7 @@ na_values_enade = [
     "Resultado desconsiderado devido à Política de Transferência Assistida (Portaria MEC nº 24/2016)"
 ]
 
-na_values_cpc = []
+na_values_cpc = ["", "-", "."]
 
 replace_values_cpc = {}
 
