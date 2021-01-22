@@ -93,7 +93,15 @@ rename_columns_enade = {
 }
 
 rename_columns_cpc = {
-
+    "area_de_enquadramento": "area_de_avaliacao",
+    "concluintes_inscritos": "n_de_concluintes_inscritos",
+    "concluintes_participantes": "n_de_concluintes_participantes",
+    "n_de_concluintes_participantes_com_nota_no_enem": "concluintes_participantes_com_nota_no_enem",
+    "nr_de_docentes": "n_de_docentes",
+    "nota_bruta_oportunidades_de_ampliacao_da_formacao": "nota_bruta_oportunidade_de_ampliacao_da_formacao",
+    "nota_continua_do_enade": "conceito_enade_continuo",
+    "nota_padronizada_oportunidades_de_ampliacao_da_formacao": "nota_padronizada_oportunidade_de_ampliacao_da_formacao",
+    "percentual_de_concluintes_participantes_com_nota_no_enem": "proporcao_de_concluintes_participantes_com_nota_no_enem"
 }
 
 na_values_enade = [
