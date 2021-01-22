@@ -154,6 +154,8 @@ def load_indicadores(df, csv_file, db_con, sql_table, sql_schema):
     if not cur_cols.empty and not new_cols.empty:
         print(f"New columns found: {new_cols}")
         utils.add_db_table_columns(new_cols, "text", db_con, sql_table, sql_schema)
+        missing_cols = cur_cols.difference(df.columns)
+        print(f"Missing columns: {missing_cols}")
     df.to_sql(sql_table, db_con, sql_schema, index=False, if_exists='append',
               dtype=sql_dtypes)
 
