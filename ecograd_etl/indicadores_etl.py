@@ -8,9 +8,27 @@ from zipfile import ZipFile
 
 load_dotenv()
 
+cpc_conf = {
+    "2019": {
+        "url": "https://download.inep.gov.br/educacao_superior/indicadores/cpc/2019/resultados_cpc_2019.csv"
+    },
+    "2018": {
+        "url": "https://download.inep.gov.br/educacao_superior/igc_cpc/2018/portal_CPC_edicao2018.csv"
+    },
+    "2017": {
+        "url": "https://download.inep.gov.br/educacao_superior/igc_cpc/2018/resultado_cpc_2017.csv"
+    },
+    "2016": {
+        "url": "https://download.inep.gov.br/educacao_superior/indicadores/legislacao/2017/Resultado_CPC_2016_portal_23_02_2018.csv"
+    },
+    "2015": {
+        "url": "https://download.inep.gov.br/educacao_superior/indicadores/legislacao/2017/cpc_2015_portal_atualizado_03_10_2017.csv"
+    }
+}
+
 enade_conf = {
     "2019": {
-        "url": "https://download.inep.gov.br/educacao_superior/indicadores/resultados/2019/Conceito_Enade_2019.csv"
+        "url": "https://download.inep.gov.br/educacao_superior/indicadores/resultados/2019/Conceito_Enade_2019.csv",
     },
     "2018": {
         "url": "https://download.inep.gov.br/educacao_superior/indicadores/legislacao/2019/resultados_conceito_enade_2018.csv"
@@ -142,8 +160,8 @@ def load_indicadores(df, csv_file, db_con, sql_table, sql_schema):
 def etl_indicadores(years, db_url, sql_table, sql_schema, data_dir="data"):
     db_con = setup_db(db_url, sql_table, sql_schema)
     for year in years:
-        conf = enade_conf[year]
-        csv_file = os.path.join(data_dir, f"conceito_enade_{year}.csv")
+        conf = cpc_conf[year]
+        csv_file = os.path.join(data_dir, f"inep_cpc_{year}.csv")
         download_indicadores(conf["url"], csv_file)
         extract_kwargs = conf["extract_kwargs"] if "extract_kwargs" in conf else {}
         df = extract_indicadores(csv_file, **extract_kwargs)
@@ -152,14 +170,14 @@ def etl_indicadores(years, db_url, sql_table, sql_schema, data_dir="data"):
         load_indicadores(df, csv_file, db_con, sql_table, sql_schema)
 
 def main(args):
-    years = enade_conf.keys() if len(args) == 0 else args
+    years = cpc_conf.keys() if len(args) == 0 else args
     data_dir = "data"
     db_url = utils.build_db_url(
         "postgresql", os.getenv("POSTGRES_USER"), os.getenv("POSTGRES_PWD"),
         os.getenv("POSTGRES_HOST"), os.getenv("POSTGRES_PORT"), os.getenv("POSTGRES_DB")
     )
-    sql_table = "enade"
-    sql_schema = "indicadores"
+    sql_table = "indicadores"
+    sql_schema = "inep"
     etl_indicadores(years, db_url, sql_table, sql_schema, data_dir)
 
 if __name__ == '__main__':
