@@ -126,7 +126,7 @@ def transform_indicadores(df, year):
         df.rename(columns=cols_to_rename, inplace=True)
     if 'ano' not in df.columns:
         df['ano'] = year
-    df.replace(replace_values)
+    df.replace(replace_values, inplace=True)
     return df
 
 def load_indicadores(df, csv_file, db_con, sql_table, sql_schema):
