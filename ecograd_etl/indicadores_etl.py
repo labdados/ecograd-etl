@@ -23,6 +23,21 @@ cpc_conf = {
     },
     "2015": {
         "url": "https://download.inep.gov.br/educacao_superior/indicadores/legislacao/2017/cpc_2015_portal_atualizado_03_10_2017.csv"
+    },
+    "2014": {
+        "url": "https://download.inep.gov.br/educacao_superior/enade/planilhas/2014/cpc2014_atualizado_em_04122017.csv"
+    },
+    "2013": {
+        "url": "https://download.inep.gov.br/educacao_superior/enade/planilhas/2013/cpc2013_atualizado_em_27112017.csv"        
+    },
+    "2012": {
+        "url": "https://download.inep.gov.br/educacao_superior/enade/planilhas/2012/cpc_2012_site_2014_03_14.csv"
+    },
+    "2011": {
+        "url": "https://download.inep.gov.br/educacao_superior/enade/planilhas/2011/tabela_enade_cpc_2011_retificado_08_02_13.csv"
+    },
+    "2010": {
+        "url": "https://download.inep.gov.br/educacao_superior/enade/planilhas/2010/tabela_enade_cpc_2010.csv"
     }
 }
 
