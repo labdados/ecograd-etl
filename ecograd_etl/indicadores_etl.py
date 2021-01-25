@@ -118,7 +118,8 @@ rename_columns_cpc = {
     "nota_continua_do_enade": "conceito_enade_continuo",
     "nota_padronizada_oportunidades_de_ampliacao_da_formacao": "nota_padronizada_oportunidade_de_ampliacao_da_formacao",
     "obs": "observacao",
-    "percentual_de_concluintes_participantes_com_nota_no_enem": "proporcao_de_concluintes_participantes_com_nota_no_enem"
+    "percentual_de_concluintes_participantes_com_nota_no_enem": "proporcao_de_concluintes_participantes_com_nota_no_enem",
+    "uf_do_curso": "sigla_da_uf"
 }
 
 na_values_enade = [
