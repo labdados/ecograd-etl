@@ -27,18 +27,18 @@ cpc_conf = {
     "2014": {
         "url": "https://download.inep.gov.br/educacao_superior/enade/planilhas/2014/cpc2014_atualizado_em_04122017.csv"
     },
-    "2013": {
-        "url": "https://download.inep.gov.br/educacao_superior/enade/planilhas/2013/cpc2013_atualizado_em_27112017.csv"        
-    },
-    "2012": {
-        "url": "https://download.inep.gov.br/educacao_superior/enade/planilhas/2012/cpc_2012_site_2014_03_14.csv"
-    },
-    "2011": {
-        "url": "https://download.inep.gov.br/educacao_superior/enade/planilhas/2011/tabela_enade_cpc_2011_retificado_08_02_13.csv"
-    },
-    "2010": {
-        "url": "https://download.inep.gov.br/educacao_superior/enade/planilhas/2010/tabela_enade_cpc_2010.csv"
-    }
+#     "2013": {
+#         "url": "https://download.inep.gov.br/educacao_superior/enade/planilhas/2013/cpc2013_atualizado_em_27112017.csv"        
+#     },
+#     "2012": {
+#         "url": "https://download.inep.gov.br/educacao_superior/enade/planilhas/2012/cpc_2012_site_2014_03_14.csv"
+#     },
+#     "2011": {
+#         "url": "https://download.inep.gov.br/educacao_superior/enade/planilhas/2011/tabela_enade_cpc_2011_retificado_08_02_13.csv"
+#     },
+#     "2010": {
+#         "url": "https://download.inep.gov.br/educacao_superior/enade/planilhas/2010/tabela_enade_cpc_2010.csv"
+#     }
 }
 
 enade_conf = {
@@ -141,7 +141,7 @@ rename_columns_cpc = {
     "nota_padronizada_de_doutores": "nota_padronizada_doutores",
     "nota_padronizada_de_mestres": "nota_padronizada_mestres",
     "nota_padronizada_de_regime_de_trabalho": "nota_padronizada_regime_de_trabalho",
-    "nota_padronizada_idd": "nota_padronizada_do_idd",
+    "nota_padronizada_do_idd": "nota_padronizada_idd",
     "nota_padronizada_infraestrutura": "nota_padronizada_infraestrutura_e_instalacoes_fisicas",
     "nota_padronizada_oport_ampliacao": "nota_padronizada_oportunidade_de_ampliacao_da_formacao",
     "nota_padronizada_org_didatico_pedagogica": "nota_padronizada_organizacao_didatico_pedagogica",
