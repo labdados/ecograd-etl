@@ -165,8 +165,8 @@ def download_indicadores(url, output_file):
 
 def extract_indicadores(csv_file, **kwargs):
     return pd.read_csv(csv_file, delimiter = ";", low_memory=False,
-                       encoding="latin1", decimal=",", na_values=na_values_cpc,
-                       **kwargs)
+                       encoding="latin1", decimal=",", thousands=".",
+                       na_values=na_values_cpc, **kwargs)
 
 def transform_indicadores(df, year):
     df.dropna(axis = 0, how = "all", inplace=True)
