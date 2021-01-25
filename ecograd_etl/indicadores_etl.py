@@ -143,7 +143,7 @@ rename_columns_cpc = {
     "nota_padronizada_de_regime_de_trabalho": "nota_padronizada_regime_de_trabalho",
     "nota_padronizada_idd": "nota_padronizada_do_idd",
     "nota_padronizada_infraestrutura": "nota_padronizada_infraestrutura_e_instalacoes_fisicas",
-    "nota_padronizada_oportunidades_de_ampliacao_da_formacao": "nota_padronizada_oportunidade_de_ampliacao_da_formacao",
+    "nota_padronizada_oport_ampliacao": "nota_padronizada_oportunidade_de_ampliacao_da_formacao",
     "nota_padronizada_org_didatico_pedagogica": "nota_padronizada_organizacao_didatico_pedagogica",
     "nr_cursos_da_unidade": "numero_de_cursos_da_unidade",
     "nr_de_docentes": "n_de_docentes",
