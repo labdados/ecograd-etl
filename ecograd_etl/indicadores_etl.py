@@ -128,7 +128,8 @@ na_values_enade = [
 
 na_values_cpc = ["", "-", "."]
 
-replace_values_cpc = {}
+replace_values_cpc = {
+}
 
 replace_values_enade = {
     "categoria_administrativa": {
@@ -148,7 +149,8 @@ replace_values_enade = {
 }
 
 sql_dtypes = {
-    "codigo_do_curso": sqlalchemy.types.Text
+    "codigo_do_curso": sqlalchemy.types.Text,
+    "proporcao_de_concluintes_participantes_com_nota_no_enem": sqlalchemy.types.Text,
 }
 
 def setup_db(db_url, sql_table, sql_schema):
