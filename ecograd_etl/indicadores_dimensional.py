@@ -69,5 +69,6 @@ def etl_indicadores_dimensional():
     create_municipio_table(db_con)
     create_area_table(db_con)
     create_categoria_admin_table(db_con)
+    create_fact_table(db_con)
 
 etl_indicadores_dimensional()
