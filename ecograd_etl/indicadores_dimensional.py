@@ -25,6 +25,7 @@ def create_municipio_table(db_con, sql_table="municipio", sql_schema="inep"):
                          FROM inep.indicadores""", db_con)
         .groupby(["id_municipio"])
         .agg(lambda x:x.value_counts().index[0])
+        .reset_index()
     )
     mun.to_sql(sql_table, db_con, sql_schema, index=False,  if_exists="replace")
 
