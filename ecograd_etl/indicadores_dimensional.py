@@ -18,10 +18,13 @@ def create_area_table(db_con, sql_table="area", sql_schema="inep"):
 def create_categoria_admin_table(db_con, sql_table="categoria_administrativa", sql_schema="inep"):
     # pega a entrada mais recente de nome e sigla da IES
     df = (
-        pd.read_sql("""SELECT DISTINCT categoria_administrativa FROM inep.indicadores
+        pd.read_sql("""
+        SELECT ROW_NUMBER() OVER (ORDER BY categoria_administrativa) AS id_categoria_administrativa,
+        categoria_administrativa
+        FROM (SELECT DISTINCT categoria_administrativa FROM inep.indicadores) t1
                     """, db_con)
     )
-    df.to_sql(sql_table, db_con, sql_schema, index=True,  if_exists="replace")
+    df.to_sql(sql_table, db_con, sql_schema, index=False,  if_exists="replace")
 
 def create_ies_table(db_con, sql_table="ies", sql_schema="inep"):
     # pega a entrada mais recente de nome e sigla da IES
