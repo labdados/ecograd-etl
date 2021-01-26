@@ -51,7 +51,8 @@ def create_municipio_table(db_con, sql_table="municipio", sql_schema="inep"):
 def create_fact_table(db_con, sql_table="avaliacao", sql_schema="inep"):
     df = (
         pd.read_sql("""
-            SELECT codigo_da_area AS id_area, codigo_da_ies AS id_ies, id_categoria_administrativa,
+            SELECT ano, codigo_do_curso AS id_curso, codigo_da_area AS id_area, codigo_da_ies AS id_ies,
+                   id_categoria_administrativa,
                    codigo_do_municipio AS id_municipio, cpc_continuo, cpc_faixa,
                    conceito_enade_continuo
             FROM inep.indicadores ind, inep.categoria_administrativa ca
