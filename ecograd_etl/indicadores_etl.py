@@ -185,6 +185,10 @@ sql_dtypes = {
     "proporcao_de_concluintes_participantes_com_nota_no_enem": sqlalchemy.types.Text,
 }
 
+id_categoria_administrativa = {
+    ""
+}
+
 def setup_db(db_url, sql_table, sql_schema):
     db_con = utils.connect_db(db_url)
     utils.create_db_schema(db_con, sql_schema)
@@ -211,6 +215,7 @@ def transform_indicadores(df, year):
         df.rename(columns=cols_to_rename, inplace=True)
     if 'ano' not in df.columns:
         df['ano'] = year
+    df['cpc_continuo'] = df['cpc_continuo'].apply(lambda x: utils.parse_float(x))
     df.replace(replace_values, inplace=True)
     return df
 

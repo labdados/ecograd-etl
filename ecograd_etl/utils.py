@@ -63,6 +63,12 @@ def open_file_from_zip(zip_file_name, extension=".txt"):
     file_name = [name for name in zip_file.namelist() if name.endswith(extension)][0]
     return(zip_file.open(file_name))
 
+def parse_float(x):
+   try:
+       return float(str(x).replace(',', '.'))
+   except Exception:
+       return None
+
 def main(args):
     download_file(args[0], args[1])
 
