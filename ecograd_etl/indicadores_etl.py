@@ -163,10 +163,7 @@ na_values_enade = [
 
 na_values_cpc = ["", "-", "."]
 
-replace_values_cpc = {
-}
-
-replace_values_enade = {
+replace_values = {
     "categoria_administrativa": {
         "Pessoa Jurídica de Direito Público - Federal": "Pública Federal",
         "Pessoa Jurídica de Direito Privado - Com fins lucrativos - Sociedade Civil": "Privada com fins lucrativos",
@@ -214,7 +211,7 @@ def transform_indicadores(df, year):
         df.rename(columns=cols_to_rename, inplace=True)
     if 'ano' not in df.columns:
         df['ano'] = year
-    df.replace(replace_values_cpc, inplace=True)
+    df.replace(replace_values, inplace=True)
     return df
 
 def load_indicadores(df, csv_file, db_con, sql_table, sql_schema):
