@@ -1,5 +1,6 @@
 from dotenv import load_dotenv
 from ecograd_etl import utils, inep
+from ecograd_etl.inep import config
 import os
 import pandas as pd
 import sqlalchemy
@@ -69,7 +70,7 @@ def etl_indicadores(years, db_url, conf, dataset):
         load_indicadores(df, csv_file, db_con, sql_table, sql_schema, sql_dtype)
 
 def main(args):
-    conf = inep.config.conf
+    conf = config.conf
     db_url = utils.build_db_url(
         "postgresql", os.getenv("POSTGRES_USER"), os.getenv("POSTGRES_PWD"),
         os.getenv("POSTGRES_HOST"), os.getenv("POSTGRES_PORT"), os.getenv("POSTGRES_DB")
