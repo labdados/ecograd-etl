@@ -1,7 +1,5 @@
 from dotenv import load_dotenv
-#from ecograd_etl import utils, inep
-from ecograd_etl import utils
-from ecograd_etl.inep import config
+from ecograd_etl import utils, inep
 import os
 import pandas as pd
 import sqlalchemy
@@ -21,7 +19,7 @@ def extract_indicadores(csv_file, na_values={}, **kwargs):
                        encoding="latin1", decimal=",", thousands=".",
                        na_values=na_values, **kwargs)
 
-def transform_indicadores(df, year, rename_cols={}, replace_values={}):
+def transform_indicadores(df, year, rename_cols={}, replace_values={}, converters={}):
     df.dropna(axis = 0, how = "all", inplace=True) # drop empty rows
     df.dropna(axis = 1, how = "all", inplace=True) # drop empty columns
     df.columns = utils.clean_col_names(df.columns)
@@ -31,8 +29,11 @@ def transform_indicadores(df, year, rename_cols={}, replace_values={}):
         df.rename(columns=cols_to_rename, inplace=True)
     if 'ano' not in df.columns:
         df['ano'] = year
-    df['cpc_continuo'] = df['cpc_continuo'].apply(lambda x: utils.parse_float(x))
+    #df['cpc_continuo'] = df['cpc_continuo'].apply(lambda x: utils.parse_float(x))
     df.replace(replace_values, inplace=True)
+    for col, fn in converters.items():
+        print(f"Applying {fn} to {col}")
+        df[col] = df[col].apply(fn)
     return df
 
 def load_indicadores(df, csv_file, db_con, sql_table, sql_schema, sql_dtype={}):
@@ -68,13 +69,13 @@ def etl_indicadores(years, db_url, conf, dataset):
         load_indicadores(df, csv_file, db_con, sql_table, sql_schema, sql_dtype)
 
 def main(args):
-    conf = config.conf
-    dataset = 'cpc'
-    years = conf['datasets'][dataset]['items'].keys() if len(args) == 0 else args
+    conf = inep.config.conf
     db_url = utils.build_db_url(
         "postgresql", os.getenv("POSTGRES_USER"), os.getenv("POSTGRES_PWD"),
         os.getenv("POSTGRES_HOST"), os.getenv("POSTGRES_PORT"), os.getenv("POSTGRES_DB")
     )
+    dataset = 'cpc'
+    years = conf['datasets'][dataset]['items'].keys() if len(args) == 0 else args
     etl_indicadores(years, db_url, conf, dataset)
 
 if __name__ == '__main__':
