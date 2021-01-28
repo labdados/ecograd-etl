@@ -1,5 +1,5 @@
 from dotenv import load_dotenv
-import utils
+from ecograd_etl import utils
 import os
 import pandas as pd
 
