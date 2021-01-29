@@ -74,7 +74,9 @@ def main(args):
         "postgresql", os.getenv("POSTGRES_USER"), os.getenv("POSTGRES_PWD"),
         os.getenv("POSTGRES_HOST"), os.getenv("POSTGRES_PORT"), os.getenv("POSTGRES_DB")
     )
-    for dataset in conf['datasets'].keys():
+    #datasets = conf['datasets'].keys()
+    datasets = ['idd']
+    for dataset in datasets:
         years = conf['datasets'][dataset]['items'].keys() if len(args) == 0 else args
         etl_indicadores(years, db_url, conf, dataset)
 

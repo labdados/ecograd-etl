@@ -77,6 +77,23 @@ conf = {
                 #     "url": "https://download.inep.gov.br/educacao_superior/enade/planilhas/2010/tabela_enade_cpc_2010.csv"
                 # }
             }
+        },
+        "idd": {
+            "sql_table": "idd",
+            "items": {
+                "2019": {
+                    "url": "https://download.inep.gov.br/educacao_superior/indicadores/resultados/2019/IDD_2019.csv"
+                },
+                "2018": {
+                    "url": "https://download.inep.gov.br/educacao_superior/indicadores/legislacao/2019/resultados_IDD_2018.csv"
+                },
+                "2017": {
+                    "url": "https://download.inep.gov.br/educacao_superior/indicadores/legislacao/2018/resultados_IDD_2017.csv"
+                },
+                "2016": {
+                    "url": "https://download.inep.gov.br/educacao_superior/indicadores/legislacao/2017/resultado_IDD2016_portal_06_09_2017.csv",
+                },
+            }
         }
     },
     "rename_columns": {
