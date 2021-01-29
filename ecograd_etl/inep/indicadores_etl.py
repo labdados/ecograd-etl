@@ -1,11 +1,9 @@
 from dotenv import load_dotenv
-from ecograd_etl import utils, inep
+from ecograd_etl import utils
 from ecograd_etl.inep import config
 import os
 import pandas as pd
-import sqlalchemy
 import sys
-from zipfile import ZipFile
 
 load_dotenv()
 
