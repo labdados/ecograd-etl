@@ -130,6 +130,7 @@ conf = {
         "nota_padronizada_de_doutores": "nota_padronizada_doutores",
         "nota_padronizada_de_mestres": "nota_padronizada_mestres",
         "nota_padronizada_de_regime_de_trabalho": "nota_padronizada_regime_de_trabalho",
+        "nota_padronizada_idd": "idd_continuo",
         "nota_padronizada_do_idd": "nota_padronizada_idd",
         "nota_padronizada_infraestrutura": "nota_padronizada_infraestrutura_e_instalacoes_fisicas",
         "nota_padronizada_oport_ampliacao": "nota_padronizada_oportunidade_de_ampliacao_da_formacao",
