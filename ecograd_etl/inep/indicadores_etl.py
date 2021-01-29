@@ -76,9 +76,9 @@ def main(args):
         "postgresql", os.getenv("POSTGRES_USER"), os.getenv("POSTGRES_PWD"),
         os.getenv("POSTGRES_HOST"), os.getenv("POSTGRES_PORT"), os.getenv("POSTGRES_DB")
     )
-    dataset = 'cpc'
-    years = conf['datasets'][dataset]['items'].keys() if len(args) == 0 else args
-    etl_indicadores(years, db_url, conf, dataset)
+    for dataset in conf['datasets'].keys():
+        years = conf['datasets'][dataset]['items'].keys() if len(args) == 0 else args
+        etl_indicadores(years, db_url, conf, dataset)
 
 if __name__ == '__main__':
     main(sys.argv[1:])
