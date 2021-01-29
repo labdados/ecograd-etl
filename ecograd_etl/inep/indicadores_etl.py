@@ -77,8 +77,9 @@ def main(args):
     datasets = ['idd']
     for dataset in datasets:
         years = conf['datasets'][dataset]['items'].keys() if len(args) == 0 else args
-        with db_engine.begin() as db_con:
-            etl_indicadores(years, db_con, conf, dataset)
+        db_con = db_engine.connect()
+        #with db_engine.begin() as db_con:
+        etl_indicadores(years, db_con, conf, dataset)
 
 if __name__ == '__main__':
     main(sys.argv[1:])
