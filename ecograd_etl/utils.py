@@ -35,10 +35,9 @@ def create_db_schema(db_con, sql_schema):
     print(f"Creating schema {sql_schema}")
     db_con.execute(f"CREATE SCHEMA IF NOT EXISTS {sql_schema};")
 
-def connect_db(db_url):
-    print("Connecting to database")
-    db_engine = create_engine(db_url, pool_recycle=3600)
-    return db_engine.connect()
+def create_db_engine(db_url):
+    print("Creating database engine")
+    return create_engine(db_url, pool_recycle=3600)
 
 def download_file(url, output_file):
     output_filename = url.split('/')[-1]

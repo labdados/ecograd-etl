@@ -7,11 +7,9 @@ import sys
 
 load_dotenv()
 
-def setup_db(db_url, sql_table, sql_schema):
-    db_con = utils.connect_db(db_url)
+def clean_db(db_con, sql_table, sql_schema):
     utils.create_db_schema(db_con, sql_schema)
     utils.drop_db_table(db_con, sql_table, sql_schema)
-    return db_con
 
 def extract_indicadores(csv_file, na_values={}, **kwargs):
     return pd.read_csv(csv_file, low_memory=False, delimiter = ";",
@@ -47,11 +45,11 @@ def load_indicadores(df, csv_file, db_con, sql_table, sql_schema, sql_dtype={}):
     df.to_sql(sql_table, db_con, sql_schema, index=False, if_exists='append',
               dtype=sql_dtype)
 
-def etl_indicadores(years, db_url, conf, dataset):
+def etl_indicadores(years, db_con, conf, dataset):
     data_dir = conf['data_dir']
     sql_schema = conf['sql_schema']
     sql_table = conf['datasets'][dataset]['sql_table']
-    db_con = setup_db(db_url, sql_table, sql_schema)
+    clean_db(db_con, sql_table, sql_schema)
     dataset_items = conf['datasets'][dataset]['items']
     for year in years:
         item_conf = dataset_items[year]
@@ -74,11 +72,13 @@ def main(args):
         "postgresql", os.getenv("POSTGRES_USER"), os.getenv("POSTGRES_PWD"),
         os.getenv("POSTGRES_HOST"), os.getenv("POSTGRES_PORT"), os.getenv("POSTGRES_DB")
     )
+    db_engine = utils.create_db_engine(db_url)
     #datasets = conf['datasets'].keys()
     datasets = ['idd']
     for dataset in datasets:
         years = conf['datasets'][dataset]['items'].keys() if len(args) == 0 else args
-        etl_indicadores(years, db_url, conf, dataset)
+        with db_engine.begin() as db_con:
+            etl_indicadores(years, db_con, conf, dataset)
 
 if __name__ == '__main__':
     main(sys.argv[1:])
