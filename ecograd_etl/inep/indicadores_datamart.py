@@ -71,7 +71,8 @@ def etl_indicadores_dimensional():
         "postgresql", os.getenv("POSTGRES_USER"), os.getenv("POSTGRES_PWD"),
         os.getenv("POSTGRES_HOST"), os.getenv("POSTGRES_PORT"), os.getenv("POSTGRES_DB")
     )
-    db_con = utils.connect_db(db_url)
+    db_engine = utils.create_db_engine(db_url)
+    db_con = db_engine.connect()
     create_ies_table(db_con)
     create_municipio_table(db_con)
     create_area_table(db_con)
