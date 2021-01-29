@@ -30,9 +30,9 @@ def transform_indicadores(df, year, rename_cols={}, replace_values={}, converter
         df.rename(columns=cols_to_rename, inplace=True)
     if 'ano' not in df.columns:
         df['ano'] = year
-    #df['cpc_continuo'] = df['cpc_continuo'].apply(lambda x: utils.parse_float(x))
     df.replace(replace_values, inplace=True)
-    for col, fn in converters.items():
+    cols_to_convert = utils.filter_dict_by_keys(converters, df.columns)
+    for col, fn in cols_to_convert.items():
         print(f"Applying {fn} to {col}")
         df[col] = df[col].apply(fn)
     return df
@@ -64,10 +64,11 @@ def etl_indicadores(years, db_url, conf, dataset):
         df = extract_indicadores(csv_file, conf['na_values'], **extract_kwargs)
         rename_coluns = conf['rename_columns'] if 'rename_columns' in conf else {}
         replace_values = conf['replace_values'] if 'replace_values' in conf else {}
-        df = transform_indicadores(df, year, rename_coluns, replace_values)
-        print("Dataframe columns: ", df.columns)
+        converters = conf['converters'] if 'converters' in conf else {}
+        df = transform_indicadores(df, year, rename_coluns, replace_values, converters)
+        print("Columns: ", df.columns)
         sql_dtype = conf['dtype'] if 'dtype' in conf else {}
-        load_indicadores(df, csv_file, db_con, sql_table, sql_schema, sql_dtype)
+        #load_indicadores(df, csv_file, db_con, sql_table, sql_schema, sql_dtype)
 
 def main(args):
     conf = config.conf
