@@ -57,7 +57,7 @@ def etl_indicadores(years, db_url, conf, dataset):
     dataset_items = conf['datasets'][dataset]['items']
     for year in years:
         item_conf = dataset_items[year]
-        csv_file = os.path.join(data_dir, f"inep_cpc_{year}.csv")
+        csv_file = os.path.join(data_dir, f"inep_{dataset}_{year}.csv")
         print(f"Downloading file {csv_file}")
         utils.download_file(item_conf['url'], csv_file)
         extract_kwargs = item_conf['extract_kwargs'] if 'extract_kwargs' in item_conf else {}
