@@ -68,7 +68,7 @@ def etl_indicadores(years, db_url, conf, dataset):
         df = transform_indicadores(df, year, rename_coluns, replace_values, converters)
         print("Columns: ", df.columns)
         sql_dtype = conf['dtype'] if 'dtype' in conf else {}
-        #load_indicadores(df, csv_file, db_con, sql_table, sql_schema, sql_dtype)
+        load_indicadores(df, csv_file, db_con, sql_table, sql_schema, sql_dtype)
 
 def main(args):
     conf = config.conf
