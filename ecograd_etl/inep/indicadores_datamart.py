@@ -54,10 +54,13 @@ def create_fact_table(db_con, sql_table="avaliacao", sql_schema="inep"):
             SELECT cpc.ano, cpc.codigo_do_curso AS id_curso, cpc.codigo_da_area AS id_area,
                    cpc.codigo_da_ies AS id_ies, ca.id_categoria_administrativa,
                    cpc.codigo_do_municipio AS id_municipio, cpc.cpc_continuo, cpc.cpc_faixa,
-	               enade.conceito_enade_continuo, enade.conceito_enade_faixa
+	               enade.conceito_enade_continuo, enade.conceito_enade_faixa,
+                   idd.idd_continuo, idd.idd_faixa
 	        FROM inep.cpc cpc
 	        LEFT OUTER JOIN inep.enade enade
                 ON (cpc.ano = enade.ano and cpc.codigo_do_curso = enade.codigo_do_curso)
+            LEFT OUTER JOIN inep.idd idd
+                ON (cpc.ano = idd.ano and cpc.codigo_do_curso = idd.codigo_do_curso)
 	        LEFT OUTER JOIN inep.categoria_administrativa AS ca
                 ON cpc.categoria_administrativa = ca.categoria_administrativa""", db_con)
     )
@@ -68,7 +71,8 @@ def etl_indicadores_dimensional():
         "postgresql", os.getenv("POSTGRES_USER"), os.getenv("POSTGRES_PWD"),
         os.getenv("POSTGRES_HOST"), os.getenv("POSTGRES_PORT"), os.getenv("POSTGRES_DB")
     )
-    db_con = utils.connect_db(db_url)
+    db_engine = utils.create_db_engine(db_url)
+    db_con = db_engine.connect()
     create_ies_table(db_con)
     create_municipio_table(db_con)
     create_area_table(db_con)
