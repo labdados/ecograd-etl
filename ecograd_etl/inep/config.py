@@ -1,3 +1,4 @@
+from ecograd_etl import utils 
 import sqlalchemy
 
 conf = {
@@ -149,5 +150,8 @@ conf = {
     "dtype": {
         "codigo_do_curso": sqlalchemy.types.Text,
         "proporcao_de_concluintes_participantes_com_nota_no_enem": sqlalchemy.types.Text
+    },
+    "converters": {
+        "cpc_continuo": utils.parse_float
     }
 }
