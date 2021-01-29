@@ -152,6 +152,7 @@ conf = {
         "proporcao_de_concluintes_participantes_com_nota_no_enem": sqlalchemy.types.Text
     },
     "converters": {
-        "cpc_continuo": utils.parse_float
+        "cpc_continuo": utils.parse_float,
+        "codigo_curso": round
     }
 }
