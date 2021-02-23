@@ -36,6 +36,15 @@ def create_categoria_admin_table(db_con, table_name, source_schema, datamart_sch
     )
     df.to_sql(table_name, db_con, datamart_schema, index_label='id', if_exists='replace')
 
+def create_curso_table(db_con, table_name, source_schema, datamart_schema):
+    # pega a entrada mais frequente de nome de area para cada codigo
+    df = (
+        pd.read_sql(f"""SELECT DISTINCT codigo_do_curso AS cod_curso, modalidade_de_ensino
+                        FROM {source_schema}.cpc
+                        ORDER BY cod_curso""", db_con)
+    )
+    df.to_sql(table_name, db_con, datamart_schema, index_label='id', if_exists='replace')
+
 def create_ies_table(db_con, table_name, source_schema, datamart_schema):
     # pega a entrada mais recente de nome e sigla da IES
     df = (
@@ -80,6 +89,10 @@ def etl_indicadores_dimensional(db_con, conf):
     source_schema = conf['sql_schema']
     datamart_schema = source_schema + '_datamart'
     utils.create_db_schema(db_con, datamart_schema)
+    print("Creating dm_ano table")
+    create_ano_table(db_con, 'dm_ano', source_schema, datamart_schema)
+    print("Creating dm_curso table")
+    create_curso_table(db_con, 'dm_curso', source_schema, datamart_schema)
     print("Creating dm_ies table")
     create_ies_table(db_con, 'dm_ies', source_schema, datamart_schema)
     print("Creating dm_municipio table")
