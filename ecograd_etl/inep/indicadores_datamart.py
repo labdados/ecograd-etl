@@ -14,6 +14,7 @@ def create_ano_table(db_con, table_name, source_schema, datamart_schema):
                         FROM {source_schema}.cpc
                         ORDER BY ano""", db_con)
     )
+    df.index += 1
     df.to_sql(table_name, db_con, datamart_schema, index_label='id', if_exists='replace')
 
 def create_area_de_avaliacao_table(db_con, table_name, source_schema, datamart_schema):
