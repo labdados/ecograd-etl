@@ -22,7 +22,8 @@ def create_area_de_avaliacao_table(db_con, table_name, source_schema, datamart_s
     df = (
         pd.read_sql(f"""SELECT DISTINCT codigo_da_area AS cod_area,
                         UPPER(area_de_avaliacao) AS nome_area
-                        FROM {source_schema}.cpc""", db_con)
+                        FROM {source_schema}.cpc
+                        ORDER BY cod_area""", db_con)
         .drop_duplicates(subset=['cod_area'], keep='first')
     )
     df.index += 1 # id starting from 1
@@ -53,7 +54,9 @@ def create_ies_table(db_con, table_name, source_schema, datamart_schema):
     # pega a entrada mais recente de nome e sigla da IES
     df = (
         pd.read_sql(f"""SELECT DISTINCT codigo_da_ies AS cod_ies, nome_da_ies AS nome_ies,
-                         sigla_da_ies AS sigla_ies FROM {source_schema}.cpc
+                         sigla_da_ies AS sigla_ies
+                         FROM {source_schema}.cpc
+                         ORDER BY cod_ies
                     """, db_con)
         .drop_duplicates(subset=["cod_ies"], keep="first")
     )
@@ -65,7 +68,8 @@ def create_municipio_table(db_con, table_name, source_schema, datamart_schema):
     df = (
         pd.read_sql(f"""SELECT DISTINCT codigo_do_municipio AS cod_municipio,
                          UPPER(municipio_do_curso) AS nome_municipio, sigla_da_uf AS uf
-                         FROM {source_schema}.cpc""", db_con)
+                         FROM {source_schema}.cpc
+                         ORDER BY cod_municipio""", db_con)
         .groupby(['cod_municipio'])
         .agg(lambda x:x.value_counts().index[0])
         .reset_index()
