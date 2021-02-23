@@ -52,7 +52,7 @@ def create_municipio_table(db_con, table_name, source_schema, datamart_schema):
         pd.read_sql(f"""SELECT DISTINCT codigo_do_municipio AS cod_municipio,
                          UPPER(municipio_do_curso) AS nome_municipio, sigla_da_uf AS uf
                          FROM {source_schema}.cpc""", db_con)
-        .groupby(['id_municipio'])
+        .groupby(['cod_municipio'])
         .agg(lambda x:x.value_counts().index[0])
         .reset_index()
     )
