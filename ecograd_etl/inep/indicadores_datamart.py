@@ -14,7 +14,7 @@ def create_ano_table(db_con, table_name, source_schema, datamart_schema):
                         FROM {source_schema}.cpc
                         ORDER BY ano""", db_con)
     )
-    df.index += 1
+    df.index += 1 # id starting from 1
     df.to_sql(table_name, db_con, datamart_schema, index_label='id', if_exists='replace')
 
 def create_area_de_avaliacao_table(db_con, table_name, source_schema, datamart_schema):
@@ -25,6 +25,7 @@ def create_area_de_avaliacao_table(db_con, table_name, source_schema, datamart_s
                         FROM {source_schema}.cpc""", db_con)
         .drop_duplicates(subset=['cod_area'], keep='first')
     )
+    df.index += 1 # id starting from 1
     df.to_sql(table_name, db_con, datamart_schema, index_label='id', if_exists='replace')
 
 def create_categoria_admin_table(db_con, table_name, source_schema, datamart_schema):
@@ -35,6 +36,7 @@ def create_categoria_admin_table(db_con, table_name, source_schema, datamart_sch
         FROM {source_schema}.cpc
         ORDER BY categoria_administrativa""", db_con)
     )
+    df.index += 1 # id starting from 1
     df.to_sql(table_name, db_con, datamart_schema, index_label='id', if_exists='replace')
 
 def create_curso_table(db_con, table_name, source_schema, datamart_schema):
@@ -44,6 +46,7 @@ def create_curso_table(db_con, table_name, source_schema, datamart_schema):
                         FROM {source_schema}.cpc
                         ORDER BY cod_curso""", db_con)
     )
+    df.index += 1 # id starting from 1
     df.to_sql(table_name, db_con, datamart_schema, index_label='id', if_exists='replace')
 
 def create_ies_table(db_con, table_name, source_schema, datamart_schema):
@@ -54,6 +57,7 @@ def create_ies_table(db_con, table_name, source_schema, datamart_schema):
                     """, db_con)
         .drop_duplicates(subset=["cod_ies"], keep="first")
     )
+    df.index += 1 # id starting from 1
     df.to_sql(table_name, db_con, datamart_schema, index_label='id', if_exists='replace')
 
 def create_municipio_table(db_con, table_name, source_schema, datamart_schema):
@@ -66,6 +70,7 @@ def create_municipio_table(db_con, table_name, source_schema, datamart_schema):
         .agg(lambda x:x.value_counts().index[0])
         .reset_index()
     )
+    df.index += 1 # id starting from 1
     df.to_sql(table_name, db_con, datamart_schema, index_label='id', if_exists='replace')
 
 def create_fact_table(db_con, table_name, source_schema, datamart_schema):
