@@ -43,7 +43,8 @@ def create_categoria_admin_table(db_con, table_name, source_schema, datamart_sch
 def create_curso_table(db_con, table_name, source_schema, datamart_schema):
     # pega a entrada mais frequente de nome de area para cada codigo
     df = (
-        pd.read_sql(f"""SELECT DISTINCT codigo_do_curso AS cod_curso, modalidade_de_ensino, observacao,
+        pd.read_sql(f"""SELECT DISTINCT codigo_do_curso AS cod_curso, modalidade_de_ensino,
+                        observacao
                         FROM {source_schema}.cpc
                         ORDER BY cod_curso""", db_con)
     )
