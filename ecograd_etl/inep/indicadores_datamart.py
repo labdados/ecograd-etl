@@ -81,8 +81,8 @@ def create_municipio_table(db_con, table_name, source_schema, datamart_schema):
 def create_fact_table(db_con, table_name, source_schema, datamart_schema):
     df = (
         pd.read_sql(f"""
-            SELECT cpc.ano, cpc.codigo_do_curso AS id_curso, cpc.codigo_da_area AS id_area,
-                   cpc.codigo_da_ies AS id_ies, ca.id_categoria_administrativa,
+            SELECT ano.id AS id_ano, curso.id AS id_curso, area.id AS id_area,
+                   ies.id AS id_ies, cat_admin.id AS id_categoria_administrativa,
                    cpc.codigo_do_municipio AS id_municipio,
                    cpc.cpc_continuo, cpc.cpc_faixa,
                    enade.conceito_enade_continuo, enade.conceito_enade_faixa,
@@ -102,12 +102,23 @@ def create_fact_table(db_con, table_name, source_schema, datamart_schema):
                    nota_bruta_regime_de_trabalho, nota_padronizada_regime_de_trabalho,
                    nota_padronizada_oportunidades_de_ampliacao_da_formacao
 	        FROM {source_schema}.cpc cpc
-	        LEFT OUTER JOIN {source_schema}.enade enade
+            LEFT OUTER JOIN {datamart_schema}.ano ano
+                ON (cpc.ano = ano.ano)
+            LEFT OUTER JOIN {datamart_schema}.area area
+                ON (cpc.codigo_da_area = area.cod_area)
+            LEFT OUTER JOIN {datamart_schema}.categoria_administrativa cat_admin
+                ON (cpc.categoria_administrativa = cat_admin.categoria_administrativa)
+            LEFT OUTER JOIN {datamart_schema}.curso curso
+                ON (cpc.codigo_do_curso = curso.cod_curso)
+            LEFT OUTER JOIN {datamart_schema}.ies ies
+                ON (cpc.codigo_da_ies = ies.cod_ies)
+            LEFT OUTER JOIN {datamart_schema}.municipio mun
+                ON (cpc.codigo_do_municipio = curso.cod_municipio)
+            LEFT OUTER JOIN {datamart_schema}.enade enade
                 ON (cpc.ano = enade.ano and cpc.codigo_do_curso = enade.codigo_do_curso)
             LEFT OUTER JOIN {source_schema}.idd idd
                 ON (cpc.ano = idd.ano and cpc.codigo_do_curso = idd.codigo_do_curso)
-	        LEFT OUTER JOIN {source_schema}.categoria_administrativa AS ca
-                ON cpc.categoria_administrativa = ca.categoria_administrativa""", db_con)
+	        """, db_con)
     )
     df.to_sql(table_name, db_con, datamart_schema, index=False, if_exists='replace')
 
