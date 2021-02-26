@@ -82,9 +82,24 @@ def create_fact_table(db_con, table_name, source_schema, datamart_schema):
         pd.read_sql(f"""
             SELECT cpc.ano, cpc.codigo_do_curso AS id_curso, cpc.codigo_da_area AS id_area,
                    cpc.codigo_da_ies AS id_ies, ca.id_categoria_administrativa,
-                   cpc.codigo_do_municipio AS id_municipio, cpc.cpc_continuo, cpc.cpc_faixa,
-	               enade.conceito_enade_continuo, enade.conceito_enade_faixa,
-                   idd.idd_continuo, idd.idd_faixa
+                   cpc.codigo_do_municipio AS id_municipio,
+                   cpc.cpc_continuo, cpc.cpc_faixa,
+                   enade.conceito_enade_continuo, enade.conceito_enade_faixa,
+                   idd.idd_continuo, idd.idd_faixa,
+                   cpc.n_de_concluintes_inscritos, cpc.n_de_concluintes_participantes,
+                   cpc.concluintes_participantes_com_nota_no_enem,
+                   cpc.nota_bruta_fg, cpc.nota_padronizada_fg,
+                   cpc.nota_bruta_ce, cpc.nota_padronizada_ce,
+                   cpc.nota_bruta_organizacao_didatico_pedagogica,
+                   cpc.nota_padronizada_organizacao_didatico_pedagogica,
+                   cpc.nota_bruta_infraestrutura_e_instalacoes_fisicas	
+                   cpc.nota_padronizada_infraestrutura_e_instalacoes_fisicas	
+                   cpc.nota_bruta_oportunidade_de_ampliacao_da_formacao,
+                   cpc.nota_padronizada_oportunidade_de_ampliacao_da_formacao,
+                   cpc.nota_bruta_mestres, cpc.nota_padronizada_mestres,
+                   nota_bruta_doutores, nota_padronizada_doutores,
+                   nota_bruta_regime_de_trabalho, nota_padronizada_regime_de_trabalho,
+                   nota_padronizada_oportunidades_de_ampliacao_da_formacao
 	        FROM {source_schema}.cpc cpc
 	        LEFT OUTER JOIN {source_schema}.enade enade
                 ON (cpc.ano = enade.ano and cpc.codigo_do_curso = enade.codigo_do_curso)
