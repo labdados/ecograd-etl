@@ -43,7 +43,7 @@ def create_categoria_admin_table(db_con, table_name, source_schema, datamart_sch
 def create_curso_table(db_con, table_name, source_schema, datamart_schema):
     # pega a entrada mais frequente de nome de area para cada codigo
     df = (
-        pd.read_sql(f"""SELECT DISTINCT codigo_do_curso AS cod_curso, modalidade_de_ensino
+        pd.read_sql(f"""SELECT DISTINCT codigo_do_curso AS cod_curso, modalidade_de_ensino, observacao,
                         FROM {source_schema}.cpc
                         ORDER BY cod_curso""", db_con)
     )
@@ -92,8 +92,8 @@ def create_fact_table(db_con, table_name, source_schema, datamart_schema):
                    cpc.nota_bruta_ce, cpc.nota_padronizada_ce,
                    cpc.nota_bruta_organizacao_didatico_pedagogica,
                    cpc.nota_padronizada_organizacao_didatico_pedagogica,
-                   cpc.nota_bruta_infraestrutura_e_instalacoes_fisicas	
-                   cpc.nota_padronizada_infraestrutura_e_instalacoes_fisicas	
+                   cpc.nota_bruta_infraestrutura_e_instalacoes_fisicas,
+                   cpc.nota_padronizada_infraestrutura_e_instalacoes_fisicas,
                    cpc.nota_bruta_oportunidade_de_ampliacao_da_formacao,
                    cpc.nota_padronizada_oportunidade_de_ampliacao_da_formacao,
                    cpc.nota_bruta_mestres, cpc.nota_padronizada_mestres,
