@@ -102,19 +102,19 @@ def create_fact_table(db_con, table_name, source_schema, datamart_schema):
                    nota_bruta_regime_de_trabalho, nota_padronizada_regime_de_trabalho,
                    nota_padronizada_oportunidades_de_ampliacao_da_formacao
 	        FROM {source_schema}.cpc cpc
-            LEFT OUTER JOIN {datamart_schema}.ano ano
+            LEFT OUTER JOIN {datamart_schema}.dm_ano ano
                 ON (cpc.ano = ano.ano)
-            LEFT OUTER JOIN {datamart_schema}.area area
+            LEFT OUTER JOIN {datamart_schema}.dm_area area
                 ON (cpc.codigo_da_area = area.cod_area)
-            LEFT OUTER JOIN {datamart_schema}.categoria_administrativa cat_admin
+            LEFT OUTER JOIN {datamart_schema}.dm_categoria_administrativa cat_admin
                 ON (cpc.categoria_administrativa = cat_admin.categoria_administrativa)
-            LEFT OUTER JOIN {datamart_schema}.curso curso
+            LEFT OUTER JOIN {datamart_schema}.dm_curso curso
                 ON (cpc.codigo_do_curso = curso.cod_curso)
-            LEFT OUTER JOIN {datamart_schema}.ies ies
+            LEFT OUTER JOIN {datamart_schema}.dm_ies ies
                 ON (cpc.codigo_da_ies = ies.cod_ies)
-            LEFT OUTER JOIN {datamart_schema}.municipio mun
+            LEFT OUTER JOIN {datamart_schema}.dm_municipio mun
                 ON (cpc.codigo_do_municipio = curso.cod_municipio)
-            LEFT OUTER JOIN {datamart_schema}.enade enade
+            LEFT OUTER JOIN {source_schema}.enade enade
                 ON (cpc.ano = enade.ano and cpc.codigo_do_curso = enade.codigo_do_curso)
             LEFT OUTER JOIN {source_schema}.idd idd
                 ON (cpc.ano = idd.ano and cpc.codigo_do_curso = idd.codigo_do_curso)
