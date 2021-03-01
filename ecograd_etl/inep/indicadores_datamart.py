@@ -99,8 +99,7 @@ def create_fact_table(db_con, table_name, source_schema, datamart_schema):
                    cpc.nota_padronizada_oportunidade_de_ampliacao_da_formacao,
                    cpc.nota_bruta_mestres, cpc.nota_padronizada_mestres,
                    nota_bruta_doutores, nota_padronizada_doutores,
-                   nota_bruta_regime_de_trabalho, nota_padronizada_regime_de_trabalho,
-                   nota_padronizada_oportunidades_de_ampliacao_da_formacao
+                   nota_bruta_regime_de_trabalho, nota_padronizada_regime_de_trabalho
 	        FROM {source_schema}.cpc cpc
             LEFT OUTER JOIN {datamart_schema}.dm_ano ano
                 ON (cpc.ano = ano.ano)
