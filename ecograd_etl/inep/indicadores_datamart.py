@@ -113,7 +113,7 @@ def create_fact_table(db_con, table_name, source_schema, datamart_schema):
             LEFT OUTER JOIN {datamart_schema}.dm_ies ies
                 ON (cpc.codigo_da_ies = ies.cod_ies)
             LEFT OUTER JOIN {datamart_schema}.dm_municipio mun
-                ON (cpc.codigo_do_municipio = curso.cod_municipio)
+                ON (cpc.codigo_do_municipio = mun.cod_municipio)
             LEFT OUTER JOIN {source_schema}.enade enade
                 ON (cpc.ano = enade.ano and cpc.codigo_do_curso = enade.codigo_do_curso)
             LEFT OUTER JOIN {source_schema}.idd idd
