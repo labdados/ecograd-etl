@@ -104,7 +104,7 @@ def create_fact_table(db_con, table_name, source_schema, datamart_schema):
 	        FROM {source_schema}.cpc cpc
             LEFT OUTER JOIN {datamart_schema}.dm_ano ano
                 ON (cpc.ano = ano.ano)
-            LEFT OUTER JOIN {datamart_schema}.dm_area area
+            LEFT OUTER JOIN {datamart_schema}.dm_area_de_avaliacao area
                 ON (cpc.codigo_da_area = area.cod_area)
             LEFT OUTER JOIN {datamart_schema}.dm_categoria_administrativa cat_admin
                 ON (cpc.categoria_administrativa = cat_admin.categoria_administrativa)
