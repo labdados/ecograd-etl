@@ -146,9 +146,6 @@ conf = {
         "sigla_uf": "sigla_da_uf",
         "uf_do_curso": "sigla_da_uf"
     },
-    "duplicate_columns": {
-        "categoria_administrativa_geral": "categoria_administrativa"
-    },
     "replace_values": {
         "categoria_administrativa": {
             "Administração pública em geral": "Pública Municipal",
