@@ -146,20 +146,29 @@ conf = {
         "sigla_uf": "sigla_da_uf",
         "uf_do_curso": "sigla_da_uf"
     },
+    "duplicate_columns": {
+        "categoria_administrativa_geral": "categoria_administrativa"
+    },
     "replace_values": {
         "categoria_administrativa": {
-            "Pessoa Jurídica de Direito Público - Federal": "Pública Federal",
-            "Pessoa Jurídica de Direito Privado - Com fins lucrativos - Sociedade Civil": "Privada com fins lucrativos",
-            "Pessoa Jurídica de Direito Público - Estadual": "Pública Estadual",
-            "Pessoa Jurídica de Direito Privado - Sem fins lucrativos - Associação de Utilidade Pública": "Privada sem fins lucrativos",
-            "Federal": "Pública Federal",
+            "Administração pública em geral": "Pública Municipal",
             "Estadual": "Pública Estadual",
-            "Pessoa Jurídica de Direito Privado - Sem fins lucrativos - Fundação": "Privada sem fins lucrativos",
-            "Pessoa Jurídica de Direito Público - Municipal": "Pública Municipal",
+            "Federal": "Pública Federal",
+            "Fundação Pública de Direito Privado Municipal": "Pública Municipal",
+            "Pessoa Jurídica de Direito Privado - Com fins lucrativos - Associação de Utilidade Pública": "Privada com fins lucrativos",
+            "Pessoa Jurídica de Direito Privado - Com fins lucrativos - Sociedade Civil": "Privada com fins lucrativos",
             "Pessoa Jurídica de Direito Privado - Com fins lucrativos - Sociedade Mercantil ou Comercial": "Privada com fins lucrativos",
-            "Pessoa Jurídica de Direito Privado - Sem fins lucrativos - Sociedade": "Privada sem fins lucrativos",
-            "Fundação Pública de Direito Privado Municipal": "Privada sem fins lucrativos",
-            "Administração pública em geral": "Pública Municipal"
+            "Pessoa Jurídica de Direito Público - Estadual": "Pública Estadual",
+            "Pessoa Jurídica de Direito Público - Federal": "Pública Federal",
+            "Pessoa Jurídica de Direito Público - Municipal": "Pública Municipal",
+            "Pessoa Jurídica de Direito Privado - Sem fins lucrativos - Associação de Utilidade Pública": "Privada sem fins lucrativos",
+            "Pessoa Jurídica de Direito Privado - Sem fins lucrativos - Fundação": "Privada sem fins lucrativos",
+            "Pessoa Jurídica de Direito Privado - Sem fins lucrativos - Sociedade": "Privada sem fins lucrativos"
+        },
+        "categoria_administrativa_geral": {
+            "Especial": "Privada",
+            "Privada sem fins lucrativos": "Privada",
+            "Privada com fins lucrativos": "Privada"
         }
     },
     "na_values": [

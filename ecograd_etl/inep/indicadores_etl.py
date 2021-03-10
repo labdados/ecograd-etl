@@ -16,21 +16,31 @@ def extract_indicadores(csv_file, na_values={}, **kwargs):
                        encoding="latin1", decimal=",", thousands=".",
                        na_values=na_values, **kwargs)
 
-def transform_indicadores(df, year, rename_cols={}, replace_values={}, converters={}):
-    df.dropna(axis = 0, how = "all", inplace=True) # drop empty rows
-    df.dropna(axis = 1, how = "all", inplace=True) # drop empty columns
+def transform_indicadores(df, year, rename_cols={}, duplicate_cols={},
+                          replace_values={}, converters={}):
+    # Drop empty rows and columns
+    df.dropna(axis = 0, how = "all", inplace=True)
+    df.dropna(axis = 1, how = "all", inplace=True)
+    # Clean column names
     df.columns = utils.clean_col_names(df.columns)
+    # Rename columns
     cols_to_rename = utils.filter_dict_by_keys(rename_cols, df.columns)
     if cols_to_rename:
         print(f"Renaming columns: {cols_to_rename}")
         df.rename(columns=cols_to_rename, inplace=True)
-    if 'ano' not in df.columns:
-        df['ano'] = year
+    # Duplicate col to new_col. The idea is that one can change values after duplicating
+    for new_col, col in duplicate_cols.items():
+        df[new_col] = df[col]
+    # Replace values
     df.replace(replace_values, inplace=True)
     cols_to_convert = utils.filter_dict_by_keys(converters, df.columns)
+    # Apply function to columns
     for col, fn in cols_to_convert.items():
         print(f"Applying {fn} to {col}")
         df[col] = df[col].apply(fn)
+    # Add ano column if missing
+    if 'ano' not in df.columns:
+        df['ano'] = year
     return df
 
 def load_indicadores(df, csv_file, db_con, sql_table, sql_schema, sql_dtype={}):
@@ -58,10 +68,12 @@ def etl_indicadores(years, db_con, conf, dataset):
         utils.download_file(item_conf['url'], csv_file)
         extract_kwargs = item_conf['extract_kwargs'] if 'extract_kwargs' in item_conf else {}
         df = extract_indicadores(csv_file, conf['na_values'], **extract_kwargs)
-        rename_coluns = conf['rename_columns'] if 'rename_columns' in conf else {}
+        rename_cols = conf['rename_columns'] if 'rename_columns' in conf else {}
+        duplicate_cols = conf['duplicate_columns'] if 'duplicate_columns' in conf else {}
         replace_values = conf['replace_values'] if 'replace_values' in conf else {}
         converters = conf['converters'] if 'converters' in conf else {}
-        df = transform_indicadores(df, year, rename_coluns, replace_values, converters)
+        df = transform_indicadores(df, year, rename_cols, duplicate_cols,
+                                   replace_values, converters)
         print("Columns: ", df.columns)
         sql_dtype = conf['dtype'] if 'dtype' in conf else {}
         load_indicadores(df, csv_file, db_con, sql_table, sql_schema, sql_dtype)
