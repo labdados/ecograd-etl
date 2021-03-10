@@ -39,7 +39,7 @@ def create_categoria_admin_table(db_con, table_name, source_schema, datamart_sch
     # pega a entrada mais recente de nome e sigla da IES
     df = (
         pd.read_sql(f"""
-        SELECT DISTINCT categoria_administrativa
+        SELECT DISTINCT categoria_administrativa, categoria_administrativa_geral
         FROM {source_schema}.cpc
         ORDER BY categoria_administrativa""", db_con)
     )
