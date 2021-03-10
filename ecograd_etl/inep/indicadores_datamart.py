@@ -7,6 +7,11 @@ import sys
 
 load_dotenv()
 
+def ano_to_ciclo_avaliativo_enade(ano):
+    # 2016 ciclo 1, 2017 ciclo 2, 2018 ciclo 3, 2019 ciclo 1, ...
+    # por enquanto essa função mapeia corretamente. corrigir se esse mapeamento mudar
+    return ano % 3 + 1
+
 def create_ano_table(db_con, table_name, source_schema, datamart_schema):
     # pega a entrada mais frequente de nome de area para cada codigo
     df = (
@@ -15,6 +20,7 @@ def create_ano_table(db_con, table_name, source_schema, datamart_schema):
                         ORDER BY ano""", db_con)
     )
     df.index += 1 # id starting from 1
+    df['ciclo_avaliativo_enade'] = ano_to_ciclo_avaliativo_enade(df.ano)
     df.to_sql(table_name, db_con, datamart_schema, index_label='id', if_exists='replace')
 
 def create_area_de_avaliacao_table(db_con, table_name, source_schema, datamart_schema):
