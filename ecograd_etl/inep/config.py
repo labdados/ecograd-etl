@@ -164,11 +164,6 @@ conf = {
             "Pessoa Jurídica de Direito Privado - Sem fins lucrativos - Associação de Utilidade Pública": "Privada sem fins lucrativos",
             "Pessoa Jurídica de Direito Privado - Sem fins lucrativos - Fundação": "Privada sem fins lucrativos",
             "Pessoa Jurídica de Direito Privado - Sem fins lucrativos - Sociedade": "Privada sem fins lucrativos"
-        },
-        "categoria_administrativa_geral": {
-            "Especial": "Privada",
-            "Privada sem fins lucrativos": "Privada",
-            "Privada com fins lucrativos": "Privada"
         }
     },
     "na_values": [

@@ -39,10 +39,16 @@ def create_categoria_admin_table(db_con, table_name, source_schema, datamart_sch
     # pega a entrada mais recente de nome e sigla da IES
     df = (
         pd.read_sql(f"""
-        SELECT DISTINCT categoria_administrativa, categoria_administrativa_geral
+        SELECT DISTINCT categoria_administrativa
         FROM {source_schema}.cpc
         ORDER BY categoria_administrativa""", db_con)
     )
+    categoria_geral = {
+        "Especial": "Privada",
+        "Privada sem fins lucrativos": "Privada",
+        "Privada com fins lucrativos": "Privada"
+    }
+    df['categoria_administrativa_geral'] = df['categoria_administrativa'].replace(categoria_geral)
     df.index += 1 # id starting from 1
     df.to_sql(table_name, db_con, datamart_schema, index_label='id', if_exists='replace')
 
