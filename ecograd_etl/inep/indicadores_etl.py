@@ -73,8 +73,7 @@ def main(args):
         os.getenv("POSTGRES_HOST"), os.getenv("POSTGRES_PORT"), os.getenv("POSTGRES_DB")
     )
     db_engine = utils.create_db_engine(db_url)
-    #datasets = conf['datasets'].keys()
-    datasets = ['idd']
+    datasets = conf['datasets'].keys()
     for dataset in datasets:
         years = conf['datasets'][dataset]['items'].keys() if len(args) == 0 else args
         db_con = db_engine.connect()
