@@ -19,11 +19,7 @@ def clean_col_name(col):
     for search, replace in FIXES:
         col_name = re.sub(search, replace, col_name)  # noqa: PD005
     col_name = "".join(item for item in str(col_name) if item.isalnum() or "_" in item)
-    col_name = "".join(
-        letter
-        for letter in unicodedata.normalize("NFD", col_name)
-        if not unicodedata.combining(letter)
-    )
+    col_name = remove_accents(col_name)
     col_name = re.sub("_+", "_", col_name)
     col_name = col_name.strip("_")
     return col_name
@@ -67,6 +63,13 @@ def parse_float(x):
        return float(str(x).replace(',', '.'))
    except Exception:
        return None
+
+def remove_accents(txt):
+    return "".join(
+        letter
+        for letter in unicodedata.normalize("NFD", txt)
+        if not unicodedata.combining(letter)
+    )
 
 def main(args):
     download_file(args[0], args[1])
