@@ -83,7 +83,7 @@ def create_municipio_table(db_con, table_name, source_schema, datamart_schema):
                          UPPER(municipio_do_curso) AS nome_municipio, sigla_da_uf AS uf
                          FROM {source_schema}.cpc
                          ORDER BY cod_municipio""", db_con)
-    df['nome_municipio'] = utils.remove_accents(df['nome_municipio'])
+    df['nome_municipio'] = df['nome_municipio'].apply(utils.remove_accents)
     df = (
         df
         #.groupby(['cod_municipio'])
