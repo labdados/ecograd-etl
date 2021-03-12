@@ -78,21 +78,17 @@ def create_ies_table(db_con, table_name, source_schema, datamart_schema):
 
 def create_municipio_table(db_con, table_name, source_schema, datamart_schema):
     # pega a entrada mais frequente de nome e uf de municipio para cada codigo
-    # df = pd.read_csv("data/municipios_info.csv")
-    df = pd.read_sql(f"""SELECT DISTINCT codigo_do_municipio AS cod_municipio,
-                         UPPER(municipio_do_curso) AS nome_municipio, sigla_da_uf AS uf
-                         FROM {source_schema}.cpc
-                         ORDER BY cod_municipio""", db_con)
-    df['nome_municipio'] = df['nome_municipio'].apply(utils.remove_accents)
-    df = (
-        df
-        #.groupby(['cod_municipio'])
-        .groupby(['nome_municipio', 'uf'])
-        .agg(lambda x:x.value_counts().index[0])
-        .reset_index()
-        .sort_values(by=['cod_municipio'])
-    )
-    df.index += 1 # id starting from 1
+    df = pd.read_csv("data/municipios_info.csv")
+    # df = (
+    #     pd.read_sql(f"""SELECT DISTINCT codigo_do_municipio AS cod_municipio,
+    #                      UPPER(municipio_do_curso) AS nome_municipio, sigla_da_uf AS uf
+    #                      FROM {source_schema}.cpc
+    #                      ORDER BY cod_municipio""", db_con)
+    #     #.groupby(['cod_municipio'])
+    #     .agg(lambda x:x.value_counts().index[0])
+    #     .reset_index()
+    # )
+    # df.index += 1 # id starting from 1
     df.to_sql(table_name, db_con, datamart_schema, index_label='id', if_exists='replace')
 
 def create_fact_table(db_con, table_name, source_schema, datamart_schema):
