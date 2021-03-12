@@ -86,6 +86,7 @@ def create_municipio_table(db_con, table_name, source_schema, datamart_schema):
         .groupby(['nome_municipio', 'uf'])
         .agg(lambda x:x.value_counts().index[0])
         .groupby(['cod_municipio'])
+        .reset_index()
         .agg(lambda x:x.value_counts().index[0])
         .reset_index()
     )
