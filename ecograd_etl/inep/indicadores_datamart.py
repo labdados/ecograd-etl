@@ -88,8 +88,9 @@ def create_municipio_table(db_con, table_name, source_schema, datamart_schema):
         df
         #.groupby(['cod_municipio'])
         .groupby(['nome_municipio', 'uf'])
-        .agg(lambda x:x.value_counts().index[0  ])
+        .agg(lambda x:x.value_counts().index[0])
         .reset_index()
+        .sort_values(by=['cod_municipio'])
     )
     df.index += 1 # id starting from 1
     df.to_sql(table_name, db_con, datamart_schema, index_label='id', if_exists='replace')
