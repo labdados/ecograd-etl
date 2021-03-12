@@ -96,7 +96,7 @@ def create_fact_table(db_con, table_name, source_schema, datamart_schema):
         pd.read_sql(f"""
             SELECT ano.id AS id_ano, curso.id AS id_curso, area.id AS id_area,
                    ies.id AS id_ies, cat_admin.id AS id_categoria_administrativa,
-                   cpc.codigo_do_municipio AS id_municipio,
+                   mun.id AS id_municipio,
                    cpc.cpc_continuo, cpc.cpc_faixa,
                    enade.conceito_enade_continuo, enade.conceito_enade_faixa,
                    idd.idd_continuo, idd.idd_faixa,
