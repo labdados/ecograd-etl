@@ -83,11 +83,8 @@ def create_municipio_table(db_con, table_name, source_schema, datamart_schema):
                          UPPER(municipio_do_curso) AS nome_municipio, sigla_da_uf AS uf
                          FROM {source_schema}.cpc
                          ORDER BY cod_municipio""", db_con)
-        .groupby(['nome_municipio', 'uf'])
-        .agg(lambda x:x.value_counts().index[0])
-        .reset_index()
         .groupby(['cod_municipio'])
-        .agg(lambda x:x.value_counts().index[0])
+        .agg(lambda x:x.value_counts().index[0  ])
         .reset_index()
     )
     df.index += 1 # id starting from 1
