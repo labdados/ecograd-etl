@@ -21,7 +21,7 @@ write_csv(mun_info, here("data", "municipios_info.csv"))
 states_info <- mun_info %>%
   group_by(uf) %>%
   summarise(
-    cod_estado = str_sub(cod_municipio, end = 2),
+    cod_estado = str_sub(first(cod_municipio), end = 2),
     regiao = first(regiao),
     populacao = sum(populacao, na.rm = TRUE)
   )
