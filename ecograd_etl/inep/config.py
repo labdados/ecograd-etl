@@ -172,6 +172,7 @@ conf = {
         "nota_padronizada_org_didatico_pedagogica": "nota_padronizada_organizacao_didatico_pedagogica",
         "nr_cursos_da_unidade": "numero_de_cursos_da_unidade",
         "nr_de_docentes": "n_de_docentes",
+        "nr_de_cursos_com_cpc_no_trienio": "n_de_cursos_com_cpc_no_trienio",
         "nu_ano": "ano",
         "obs": "observacao",
         "org_academica": "organizacao_academica",
