@@ -143,7 +143,7 @@ conf = {
         "de_mestres": "nota_bruta_mestres",
         "edicao": "ano",
         "fx_igc": "igc_faixa",
-        #"g_ies": 
+        "g_ies": "conceito_medio_de_graduacao",
         "gama": "gama_proporcao_de_doutorandos_equivalente",
         "ies": "nome_da_ies",
         "igc": "igc_continuo",
