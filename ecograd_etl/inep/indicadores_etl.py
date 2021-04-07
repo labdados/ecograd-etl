@@ -14,10 +14,14 @@ def clean_db(db_con, sql_table, sql_schema):
 def extract_indicadores(input_file, na_values={}, **kwargs):
     file_extension = utils.get_file_extension(input_file)
     if file_extension == ".xlsx":
-        return pd.read_excel(input_file, na_values=na_values, **kwargs)
-    return pd.read_csv(input_file, low_memory=False, delimiter = ";",
-                       encoding="latin1", decimal=",", thousands=".",
-                       na_values=na_values, **kwargs)
+        df = pd.read_excel(input_file, na_values=na_values, **kwargs)
+        if not isinstance(df, pd.DataFrame):
+            df = pd.concat(df, ignore_index=True) # concat dataframes from multiple sheets
+    else:
+        df = pd.read_csv(input_file, low_memory=False, delimiter = ";",
+                         encoding="latin1", decimal=",", thousands=".",
+                         na_values=na_values, **kwargs)
+    return df
 
 def transform_indicadores(df, year, rename_cols={}, duplicate_cols={},
                           replace_values={}, converters={}):
