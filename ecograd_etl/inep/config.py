@@ -210,7 +210,8 @@ conf = {
     },
     "na_values": [
         "", "-", ".",
-        "Resultado desconsiderado devido à Política de Transferência Assistida (Portaria MEC nº 24/2016)"
+        "Resultado desconsiderado devido à Política de Transferência Assistida (Portaria MEC nº 24/2016)",
+        "Sub judice"
     ],
     "dtype": {
         "codigo_do_curso": sqlalchemy.types.Text,
