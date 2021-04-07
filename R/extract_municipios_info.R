@@ -14,7 +14,7 @@ mun_info <- read_csv(here("data", "cities_info.csv")) %>%
     regiao = region,
     populacao = pop2020
   ) %>%
-  arrange(cod_municipio) 
+  arrange(cod_municipio)
   
 write_csv(mun_info, here("data", "municipios_info.csv"))
 
@@ -24,6 +24,7 @@ states_info <- mun_info %>%
     cod_estado = str_sub(first(cod_municipio), end = 2),
     regiao = first(regiao),
     populacao = sum(populacao, na.rm = TRUE)
-  )
+  ) %>%
+  arrange(cod_estado)
 
 write_csv(states_info, here("data", "estados_info.csv"))
