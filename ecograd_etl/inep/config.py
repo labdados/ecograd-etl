@@ -100,7 +100,6 @@ conf = {
             "items": {
                 "2018": {
                     "url": "https://download.inep.gov.br/educacao_superior/igc_cpc/2018/portal_IGC_edicao2018.xlsx",
-                    "sheet_name": [0]
                 },
                 "2017": {
                     "url": "https://download.inep.gov.br/educacao_superior/igc_cpc/2018/resultado_igc_2017.xlsx"
