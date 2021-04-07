@@ -94,6 +94,23 @@ conf = {
                     "url": "https://download.inep.gov.br/educacao_superior/indicadores/legislacao/2017/resultado_IDD2016_portal_06_09_2017.csv",
                 },
             }
+        },
+        "igc": {
+            "sql_table": "igc",
+            "items": {
+                "2018": {
+                    "url": "https://download.inep.gov.br/educacao_superior/igc_cpc/2018/portal_IGC_edicao2018.xlsx"
+                },
+                "2017": {
+                    "url": "https://download.inep.gov.br/educacao_superior/igc_cpc/2018/resultado_igc_2017.xlsx"
+                },
+                "2016": {
+                    "url": "https://download.inep.gov.br/educacao_superior/igc_cpc/2016/resultado_igc_2016_11042018.xlsx",
+                },
+                "2015": {
+                    "url": "https://download.inep.gov.br/educacao_superior/indicadores/legislacao/2017/igc_2015_portal_04_12_2017.xlsx",
+                }
+            }
         }
     },
     "rename_columns": {

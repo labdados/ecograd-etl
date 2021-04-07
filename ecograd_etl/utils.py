@@ -1,4 +1,5 @@
 import pandas as pd
+import os
 import re
 import sys
 import unicodedata
@@ -45,6 +46,13 @@ def drop_db_table(db_con, sql_table, sql_schema="public"):
 
 def filter_dict_by_keys(my_dict, keys):
     return {k: my_dict[k] for k in keys if k in my_dict}
+
+def get_file_extension(filename):
+    return os.path.splitext(filename)[1]
+
+def load_csv_to_db(csv_file, db_con, sql_table, sql_schema):
+    df = pd.read_csv(csv_file)
+    df.to_sql(sql_table, db_con, sql_schema, index=False, if_exists='replace')
 
 def list_db_column_names(db_con, sql_table, sql_schema="public"):
     try:

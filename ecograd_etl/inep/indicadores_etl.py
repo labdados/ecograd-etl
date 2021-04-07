@@ -11,8 +11,11 @@ def clean_db(db_con, sql_table, sql_schema):
     utils.create_db_schema(db_con, sql_schema)
     utils.drop_db_table(db_con, sql_table, sql_schema)
 
-def extract_indicadores(csv_file, na_values={}, **kwargs):
-    return pd.read_csv(csv_file, low_memory=False, delimiter = ";",
+def extract_indicadores(input_file, na_values={}, **kwargs):
+    file_extension = utils.get_file_extension(input_file)
+    if file_extension == ".xlsx":
+        return pd.read_excel(input_file, na_values=na_values, **kwargs)
+    return pd.read_csv(input_file, low_memory=False, delimiter = ";",
                        encoding="latin1", decimal=",", thousands=".",
                        na_values=na_values, **kwargs)
 
@@ -43,8 +46,8 @@ def transform_indicadores(df, year, rename_cols={}, duplicate_cols={},
         df['ano'] = year
     return df
 
-def load_indicadores(df, csv_file, db_con, sql_table, sql_schema, sql_dtype={}):
-    print(f"Loading {csv_file} to {sql_schema}.{sql_table}")
+def load_indicadores(df, input_file, db_con, sql_table, sql_schema, sql_dtype={}):
+    print(f"Loading {input_file} to {sql_schema}.{sql_table}")
     cur_cols = utils.list_db_column_names(db_con, sql_table, sql_schema)
     new_cols = df.columns.difference(cur_cols)
     if not cur_cols.empty and not new_cols.empty:
@@ -63,11 +66,13 @@ def etl_indicadores(years, db_con, conf, dataset):
     dataset_items = conf['datasets'][dataset]['items']
     for year in years:
         item_conf = dataset_items[year]
-        csv_file = os.path.join(data_dir, f"inep_{dataset}_{year}.csv")
-        print(f"Downloading file {csv_file}")
-        utils.download_file(item_conf['url'], csv_file)
+        file_url = item_conf['url']
+        file_extension = utils.get_file_extension(file_url)
+        input_file = os.path.join(data_dir, f"inep_{dataset}_{year}{file_extension}")
+        print(f"Downloading file {input_file}")
+        utils.download_file(file_url, input_file)
         extract_kwargs = item_conf['extract_kwargs'] if 'extract_kwargs' in item_conf else {}
-        df = extract_indicadores(csv_file, conf['na_values'], **extract_kwargs)
+        df = extract_indicadores(input_file, conf['na_values'], **extract_kwargs)
         rename_cols = conf['rename_columns'] if 'rename_columns' in conf else {}
         duplicate_cols = conf['duplicate_columns'] if 'duplicate_columns' in conf else {}
         replace_values = conf['replace_values'] if 'replace_values' in conf else {}
@@ -76,7 +81,7 @@ def etl_indicadores(years, db_con, conf, dataset):
                                    replace_values, converters)
         print("Columns: ", df.columns)
         sql_dtype = conf['dtype'] if 'dtype' in conf else {}
-        load_indicadores(df, csv_file, db_con, sql_table, sql_schema, sql_dtype)
+        load_indicadores(df, input_file, db_con, sql_table, sql_schema, sql_dtype)
 
 def main(args):
     conf = config.conf
@@ -86,6 +91,7 @@ def main(args):
     )
     db_engine = utils.create_db_engine(db_url)
     datasets = conf['datasets'].keys()
+    datasets = ["igc"]
     for dataset in datasets:
         years = conf['datasets'][dataset]['items'].keys() if len(args) == 0 else args
         db_con = db_engine.connect()
