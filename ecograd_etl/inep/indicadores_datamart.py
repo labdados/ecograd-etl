@@ -65,11 +65,14 @@ def create_curso_table(db_con, table_name, source_schema, datamart_schema):
 
 def create_ies_table(db_con, table_name, source_schema, datamart_schema):
     # pega a entrada mais recente de nome e sigla da IES
+    select = "SELECT DISTINCT codigo_da_ies AS cod_ies, nome_da_ies AS nome_ies, sigla_da_ies AS sigla_ies"
     df = (
-        pd.read_sql(f"""SELECT DISTINCT codigo_da_ies AS cod_ies, nome_da_ies AS nome_ies,
-                         sigla_da_ies AS sigla_ies
-                         FROM {source_schema}.cpc
-                         ORDER BY cod_ies
+        pd.read_sql(f"""{select} FROM {source_schema}.cpc
+                        UNION
+                        {select} FROM {source_schema}.enade
+                        UNION
+                        {select} FROM {source_schema}.igc
+                        ORDER BY cod_ies
                     """, db_con)
         .drop_duplicates(subset=["cod_ies"], keep="first")
     )
