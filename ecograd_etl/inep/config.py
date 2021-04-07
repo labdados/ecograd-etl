@@ -99,16 +99,23 @@ conf = {
             "sql_table": "igc",
             "items": {
                 "2018": {
-                    "url": "https://download.inep.gov.br/educacao_superior/igc_cpc/2018/portal_IGC_edicao2018.xlsx"
+                    "url": "https://download.inep.gov.br/educacao_superior/igc_cpc/2018/portal_IGC_edicao2018.xlsx",
+                    "sheet_name": [0]
                 },
                 "2017": {
                     "url": "https://download.inep.gov.br/educacao_superior/igc_cpc/2018/resultado_igc_2017.xlsx"
                 },
                 "2016": {
                     "url": "https://download.inep.gov.br/educacao_superior/igc_cpc/2016/resultado_igc_2016_11042018.xlsx",
+                    "extract_kwargs": {
+                        "sheet_name": [0, 1, 2]
+                    }
                 },
                 "2015": {
                     "url": "https://download.inep.gov.br/educacao_superior/indicadores/legislacao/2017/igc_2015_portal_04_12_2017.xlsx",
+                    "extract_kwargs": {
+                        "sheet_name": [0, 1, 2]
+                    }
                 }
             }
         }
