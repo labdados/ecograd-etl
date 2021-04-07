@@ -177,10 +177,10 @@ def etl_indicadores_dimensional(db_con, conf):
     create_area_de_avaliacao_table(db_con, 'dm_area_de_avaliacao', source_schema, datamart_schema)
     print("Creating dm_categoria_administrativa table")
     create_categoria_admin_table(db_con, 'dm_categoria_administrativa', source_schema, datamart_schema)
-    print("Creating ft_indicadores table")
-    create_fact_table(db_con, 'ft_indicadores', source_schema, datamart_schema)
-    print("Creating ft_igc table")
-    create_igc_fact_table(db_con, 'ft_igc', source_schema, datamart_schema)
+    print("Creating ft_indicadores_curso table")
+    create_fact_table(db_con, 'ft_indicadores_curso', source_schema, datamart_schema)
+    print("Creating ft_indicadores_ies table")
+    create_igc_fact_table(db_con, 'ft_indicadores_ies', source_schema, datamart_schema)
 
 def main(args):
     conf = config.conf
