@@ -91,6 +91,10 @@ def create_municipio_table(db_con, table_name, source_schema, datamart_schema):
     # df.index += 1 # id starting from 1
     df.to_sql(table_name, db_con, datamart_schema, index_label='id', if_exists='replace')
 
+def create_uf_table(db_con, table_name, source_schema, datamart_schema):
+    df = pd.read_csv("data/estados_info.csv")
+    df.to_sql(table_name, db_con, datamart_schema, index_label='id', if_exists='replace')
+
 def create_fact_table(db_con, table_name, source_schema, datamart_schema):
     df = (
         pd.read_sql(f"""
@@ -134,9 +138,25 @@ def create_fact_table(db_con, table_name, source_schema, datamart_schema):
     )
     df.to_sql(table_name, db_con, datamart_schema, index=False, if_exists='replace')
 
+def create_indicadores_ies_fact_table(db_con, table_name, source_schema, datamart_schema):
+    df = (
+        pd.read_sql(f"""
+            SELECT ano.id AS id_ano, ies.id AS id_ies, cat_admin.id AS id_categoria_administrativa,
+            
+	        FROM {source_schema}.igc AS igc
+            LEFT OUTER JOIN {datamart_schema}.dm_ano ano
+                ON (igc.ano = ano.ano)
+            LEFT OUTER JOIN {datamart_schema}.dm_categoria_administrativa cat_admin
+                ON (igc.categoria_administrativa = cat_admin.categoria_administrativa)
+            LEFT OUTER JOIN {datamart_schema}.dm_ies ies
+                ON (cpc.codigo_da_ies = ies.cod_ies)
+	        """, db_con)
+    )
+    df.to_sql(table_name, db_con, datamart_schema, index=False, if_exists='replace')
+
 def etl_indicadores_dimensional(db_con, conf):
     source_schema = conf['sql_schema']
-    datamart_schema = source_schema + '_datamart'
+    datamart_schema = conf['datamart_schema']
     utils.create_db_schema(db_con, datamart_schema)
     print("Creating dm_ano table")
     create_ano_table(db_con, 'dm_ano', source_schema, datamart_schema)
@@ -146,6 +166,8 @@ def etl_indicadores_dimensional(db_con, conf):
     create_ies_table(db_con, 'dm_ies', source_schema, datamart_schema)
     print("Creating dm_municipio table")
     create_municipio_table(db_con, 'dm_municipio', source_schema, datamart_schema)
+    print("Creating dm_uf table")
+    create_uf_table(db_con, 'dm_uf', source_schema, datamart_schema)
     print("Creating dm_area_de_avaliacao table")
     create_area_de_avaliacao_table(db_con, 'dm_area_de_avaliacao', source_schema, datamart_schema)
     print("Creating dm_categoria_administrativa table")
