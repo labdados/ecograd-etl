@@ -114,10 +114,12 @@ conf = {
         }
     },
     "rename_columns": {
+        "alfa_proporcao_de_graduandos": "alfa_proporcao_de_graduacao",
         "ano_enade": "ano",
         "area": "area_de_avaliacao",
         "area_de_enquadramento": "area_de_avaliacao",
         "area_enquadramento": "area_de_avaliacao",
+        "beta_proporcao_de_mestrandos_equivalente": "beta_proporcao_de_mestrado_equivalente",
         "categ_administrativa": "categoria_administrativa",
         "cod_area": "codigo_da_area",
         "cod_cursos_da_unidade": "codigo_do_curso",
@@ -128,6 +130,8 @@ conf = {
         "codigo_municipio": "codigo_do_municipio",
         "codigo_uf": "sigla_da_uf",
         "conceito_enade": "conceito_enade_faixa",
+        "conceito_medio_da_graduacao": "conceito_medio_de_graduacao",
+        "conceito_medio_do_mestrado": "conceito_medio_de_mestrado",
         "concluintes_inscritos": "n_de_concluintes_inscritos",
         "concluintes_participantes": "n_de_concluintes_participantes",
         "conluintes_inscritos": "n_de_concluintes_inscritos",
@@ -161,6 +165,7 @@ conf = {
         "percentual_de_concluintes_participantes_com_nota_no_enem": "proporcao_de_concluintes_participantes_com_nota_no_enem",
         "sigla_ies": "sigla_da_ies",
         "sigla_uf": "sigla_da_uf",
+        "uf_da_ies": "sigla_da_uf",
         "uf_do_curso": "sigla_da_uf"
     },
     "replace_values": {
