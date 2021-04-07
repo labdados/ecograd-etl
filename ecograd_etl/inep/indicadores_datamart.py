@@ -138,18 +138,23 @@ def create_fact_table(db_con, table_name, source_schema, datamart_schema):
     )
     df.to_sql(table_name, db_con, datamart_schema, index=False, if_exists='replace')
 
-def create_indicadores_ies_fact_table(db_con, table_name, source_schema, datamart_schema):
+def create_igc_fact_table(db_con, table_name, source_schema, datamart_schema):
     df = (
         pd.read_sql(f"""
             SELECT ano.id AS id_ano, ies.id AS id_ies, cat_admin.id AS id_categoria_administrativa,
-            
+                   n_de_cursos_com_cpc_no_trienio, alfa_proporcao_de_graduacao,
+                   conceito_medio_de_graduacao, beta_proporcao_de_mestrado_equivalente,
+                   conceito_medio_de_mestrado, gama_proporcao_de_doutorandos_equivalente,
+                   conceito_medio_do_doutorado, igc_continuo, igc_faixa
 	        FROM {source_schema}.igc AS igc
             LEFT OUTER JOIN {datamart_schema}.dm_ano ano
                 ON (igc.ano = ano.ano)
             LEFT OUTER JOIN {datamart_schema}.dm_categoria_administrativa cat_admin
                 ON (igc.categoria_administrativa = cat_admin.categoria_administrativa)
+            LEFT OUTER JOIN {datamart_schema}.dm_uf uf
+                ON (igc.sigla_da_uf = uf.uf)
             LEFT OUTER JOIN {datamart_schema}.dm_ies ies
-                ON (cpc.codigo_da_ies = ies.cod_ies)
+                ON (igc.codigo_da_ies = ies.cod_ies)
 	        """, db_con)
     )
     df.to_sql(table_name, db_con, datamart_schema, index=False, if_exists='replace')
@@ -174,6 +179,8 @@ def etl_indicadores_dimensional(db_con, conf):
     create_categoria_admin_table(db_con, 'dm_categoria_administrativa', source_schema, datamart_schema)
     print("Creating ft_indicadores table")
     create_fact_table(db_con, 'ft_indicadores', source_schema, datamart_schema)
+    print("Creating ft_igc table")
+    create_igc_fact_table(db_con, 'ft_igc', source_schema, datamart_schema)
 
 def main(args):
     conf = config.conf
