@@ -69,8 +69,6 @@ def create_ies_table(db_con, table_name, source_schema, datamart_schema):
     df = (
         pd.read_sql(f"""{select} FROM {source_schema}.cpc
                         UNION
-                        {select} FROM {source_schema}.enade
-                        UNION
                         {select} FROM {source_schema}.igc
                         ORDER BY cod_ies
                     """, db_con)
@@ -141,11 +139,11 @@ def create_fact_table(db_con, table_name, source_schema, datamart_schema):
     )
     df.to_sql(table_name, db_con, datamart_schema, index=False, if_exists='replace')
 
-def create_igc_fact_table(db_con, table_name, source_schema, datamart_schema):
+def create_indicadores_ies_fact_table(db_con, table_name, source_schema, datamart_schema):
     df = (
         pd.read_sql(f"""
             SELECT ano.id AS id_ano, ies.id AS id_ies, cat_admin.id AS id_categoria_administrativa,
-                   n_de_cursos_com_cpc_no_trienio, alfa_proporcao_de_graduacao,
+                   uf.id AS id_uf, n_de_cursos_com_cpc_no_trienio, alfa_proporcao_de_graduacao,
                    conceito_medio_de_graduacao, beta_proporcao_de_mestrado_equivalente,
                    conceito_medio_de_mestrado, gama_proporcao_de_doutorandos_equivalente,
                    conceito_medio_do_doutorado, igc_continuo, igc_faixa
@@ -183,7 +181,7 @@ def etl_indicadores_dimensional(db_con, conf):
     print("Creating ft_indicadores_curso table")
     create_fact_table(db_con, 'ft_indicadores_curso', source_schema, datamart_schema)
     print("Creating ft_indicadores_ies table")
-    create_igc_fact_table(db_con, 'ft_indicadores_ies', source_schema, datamart_schema)
+    create_indicadores_ies_fact_table(db_con, 'ft_indicadores_ies', source_schema, datamart_schema)
 
 def main(args):
     conf = config.conf
