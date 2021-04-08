@@ -3,8 +3,8 @@ import sqlalchemy
 
 conf = {
     "data_dir": "data",
-    "sql_schema": "inep",
-    "datamart_schema": "inep_datamart",
+    "sql_schema": "dev_inep",
+    "datamart_schema": "dev_inep_datamart",
     "datasets": {
         "cpc": {
             "sql_table": "cpc",
@@ -220,6 +220,6 @@ conf = {
     },
     "converters": {
         "cpc_continuo": utils.parse_float,
-        "codigo_curso": round
+        "codigo_do_curso": lambda x: str(round(x))
     }
 }
