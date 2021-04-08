@@ -65,11 +65,12 @@ def create_curso_table(db_con, table_name, source_schema, datamart_schema):
 
 def create_ies_table(db_con, table_name, source_schema, datamart_schema):
     # pega a entrada mais recente de nome e sigla da IES
+    select = "SELECT DISTINCT codigo_da_ies AS cod_ies, nome_da_ies AS nome_ies, sigla_da_ies AS sigla_ies"
     df = (
-        pd.read_sql(f"""SELECT DISTINCT codigo_da_ies AS cod_ies, nome_da_ies AS nome_ies,
-                         sigla_da_ies AS sigla_ies
-                         FROM {source_schema}.cpc
-                         ORDER BY cod_ies
+        pd.read_sql(f"""{select} FROM {source_schema}.cpc
+                        UNION
+                        {select} FROM {source_schema}.igc
+                        ORDER BY cod_ies
                     """, db_con)
         .drop_duplicates(subset=["cod_ies"], keep="first")
     )
@@ -89,6 +90,10 @@ def create_municipio_table(db_con, table_name, source_schema, datamart_schema):
     #     .reset_index()
     # )
     # df.index += 1 # id starting from 1
+    df.to_sql(table_name, db_con, datamart_schema, index_label='id', if_exists='replace')
+
+def create_uf_table(db_con, table_name, source_schema, datamart_schema):
+    df = pd.read_csv("data/estados_info.csv")
     df.to_sql(table_name, db_con, datamart_schema, index_label='id', if_exists='replace')
 
 def create_fact_table(db_con, table_name, source_schema, datamart_schema):
@@ -134,9 +139,30 @@ def create_fact_table(db_con, table_name, source_schema, datamart_schema):
     )
     df.to_sql(table_name, db_con, datamart_schema, index=False, if_exists='replace')
 
+def create_indicadores_ies_fact_table(db_con, table_name, source_schema, datamart_schema):
+    df = (
+        pd.read_sql(f"""
+            SELECT ano.id AS id_ano, ies.id AS id_ies, cat_admin.id AS id_categoria_administrativa,
+                   uf.id AS id_uf, n_de_cursos_com_cpc_no_trienio, alfa_proporcao_de_graduacao,
+                   conceito_medio_de_graduacao, beta_proporcao_de_mestrado_equivalente,
+                   conceito_medio_de_mestrado, gama_proporcao_de_doutorandos_equivalente,
+                   conceito_medio_do_doutorado, igc_continuo, igc_faixa
+	        FROM {source_schema}.igc AS igc
+            LEFT OUTER JOIN {datamart_schema}.dm_ano ano
+                ON (igc.ano = ano.ano)
+            LEFT OUTER JOIN {datamart_schema}.dm_categoria_administrativa cat_admin
+                ON (igc.categoria_administrativa = cat_admin.categoria_administrativa)
+            LEFT OUTER JOIN {datamart_schema}.dm_uf uf
+                ON (igc.sigla_da_uf = uf.uf)
+            LEFT OUTER JOIN {datamart_schema}.dm_ies ies
+                ON (igc.codigo_da_ies = ies.cod_ies)
+	        """, db_con)
+    )
+    df.to_sql(table_name, db_con, datamart_schema, index=False, if_exists='replace')
+
 def etl_indicadores_dimensional(db_con, conf):
     source_schema = conf['sql_schema']
-    datamart_schema = source_schema + '_datamart'
+    datamart_schema = conf['datamart_schema']
     utils.create_db_schema(db_con, datamart_schema)
     print("Creating dm_ano table")
     create_ano_table(db_con, 'dm_ano', source_schema, datamart_schema)
@@ -146,12 +172,16 @@ def etl_indicadores_dimensional(db_con, conf):
     create_ies_table(db_con, 'dm_ies', source_schema, datamart_schema)
     print("Creating dm_municipio table")
     create_municipio_table(db_con, 'dm_municipio', source_schema, datamart_schema)
+    print("Creating dm_uf table")
+    create_uf_table(db_con, 'dm_uf', source_schema, datamart_schema)
     print("Creating dm_area_de_avaliacao table")
     create_area_de_avaliacao_table(db_con, 'dm_area_de_avaliacao', source_schema, datamart_schema)
     print("Creating dm_categoria_administrativa table")
     create_categoria_admin_table(db_con, 'dm_categoria_administrativa', source_schema, datamart_schema)
-    print("Creating ft_indicadores table")
+    print("Creating ft_indicadores_curso table")
     create_fact_table(db_con, 'ft_indicadores', source_schema, datamart_schema)
+    print("Creating ft_indicadores_ies table")
+    create_indicadores_ies_fact_table(db_con, 'ft_indicadores_ies', source_schema, datamart_schema)
 
 def main(args):
     conf = config.conf
