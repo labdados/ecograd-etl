@@ -74,7 +74,7 @@ def etl_indicadores(years, db_con, conf, dataset):
         file_extension = utils.get_file_extension(file_url)
         input_file = os.path.join(data_dir, f"inep_{dataset}_{year}{file_extension}")
         print(f"Downloading file {input_file}")
-        utils.download_file(file_url, input_file)
+        #utils.download_file(file_url, input_file)
         extract_kwargs = item_conf['extract_kwargs'] if 'extract_kwargs' in item_conf else {}
         df = extract_indicadores(input_file, conf['na_values'], **extract_kwargs)
         rename_cols = conf['rename_columns'] if 'rename_columns' in conf else {}
@@ -95,7 +95,6 @@ def main(args):
     )
     db_engine = utils.create_db_engine(db_url)
     datasets = conf['datasets'].keys()
-    datasets = ["igc"]
     for dataset in datasets:
         years = conf['datasets'][dataset]['items'].keys() if len(args) == 0 else args
         db_con = db_engine.connect()
