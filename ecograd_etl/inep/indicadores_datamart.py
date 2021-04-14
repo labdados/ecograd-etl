@@ -12,6 +12,12 @@ def ano_to_ciclo_avaliativo_enade(ano):
     # por enquanto essa função mapeia corretamente. corrigir se esse mapeamento mudar
     return ano % 3 + 1
 
+def ano_to_trienio_avaliativo_enade(ano):
+    ciclo = ano_to_ciclo_avaliativo_enade(ano)
+    inicio_trienio = ano - ciclo + 1
+    fim_trienio = inicio_trienio + 2
+    return inicio_trienio.astype(str) + '-' + fim_trienio.astype(str)
+
 def create_ano_table(db_con, table_name, source_schema, datamart_schema):
     # pega a entrada mais frequente de nome de area para cada codigo
     df = (
@@ -21,6 +27,7 @@ def create_ano_table(db_con, table_name, source_schema, datamart_schema):
     )
     df.index += 1 # id starting from 1
     df['ciclo_avaliativo_enade'] = ano_to_ciclo_avaliativo_enade(df.ano)
+    df['trienio_avaliativo_enade'] = ano_to_trienio_avaliativo_enade(df.ano)
     df.to_sql(table_name, db_con, datamart_schema, index_label='id', if_exists='replace')
 
 def create_area_de_avaliacao_table(db_con, table_name, source_schema, datamart_schema):
