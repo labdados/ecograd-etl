@@ -16,7 +16,7 @@ def ano_to_trienio_avaliativo_enade(ano):
     ciclo = ano_to_ciclo_avaliativo_enade(ano)
     inicio_trienio = ano - ciclo + 1
     fim_trienio = inicio_trienio + 2
-    return f"{inicio_trienio}-{fim_trienio}"
+    return inicio_trienio.astype(str) + '-' + fim_trienio.astype(str)
 
 def create_ano_table(db_con, table_name, source_schema, datamart_schema):
     # pega a entrada mais frequente de nome de area para cada codigo
