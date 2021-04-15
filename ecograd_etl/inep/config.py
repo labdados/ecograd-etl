@@ -4,7 +4,7 @@ import sqlalchemy
 conf = {
     "data_dir": "data",
     "sql_schema": "inep",
-    "datamart_schema": "dev_inep_datamart",
+    "datamart_schema": "inep_datamart",
     "datasets": {
         "cpc": {
             "sql_table": "cpc",
