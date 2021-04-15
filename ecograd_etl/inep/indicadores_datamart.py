@@ -72,7 +72,9 @@ def create_curso_table(db_con, table_name, source_schema, datamart_schema):
 
 def create_ies_table(db_con, table_name, source_schema, datamart_schema):
     # pega a entrada mais recente de nome e sigla da IES
-    select = "SELECT DISTINCT codigo_da_ies AS cod_ies, nome_da_ies AS nome_ies, sigla_da_ies AS sigla_ies"
+    select = """
+        SELECT DISTINCT codigo_da_ies AS cod_ies, nome_da_ies AS nome_ies,
+        sigla_da_ies AS sigla_ies, organizacao_academica"""
     df = (
         pd.read_sql(f"""{select} FROM {source_schema}.cpc
                         UNION
