@@ -39,6 +39,7 @@ def transform_microrregiao(df):
     return df
 
 def transform_municipio(df):
+    df.drop('regiao-imediata', inplace=True, axis=1)
     df = replace_nested_attribute_by_id(df, 'microrregiao', 'microrregiao_id')
     return df
 
