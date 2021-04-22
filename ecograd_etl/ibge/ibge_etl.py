@@ -115,10 +115,6 @@ def main(args):
     )
     db_engine = utils.create_db_engine(db_url)
     db_con = db_engine.connect()
-    json = 'http://api.sidra.ibge.gov.br/values/t/6579/v/all/p/2020/N3/all?formato=json'
-    data_dir = 'data'
-    csv_out = os.path.join(data_dir, 'populacao_uf.csv')
-    db_table = 'populacao_uf'
     db_schema = 'ibge'
     utils.create_db_schema(db_con, db_schema)
     etl_populacao(db_con, db_schema)
