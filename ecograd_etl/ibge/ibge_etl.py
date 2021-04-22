@@ -104,7 +104,7 @@ def etl_pib_uf(db_con, db_schema):
     pib_uf = extract_pib_uf()
     pib_uf = transform_pib(pib_uf)
     utils.load_dataframe_to_db(pib_uf, db_con, 'pib', db_schema)
-    pib_mun = extract_pib_municipio
+    pib_mun = extract_pib_municipio()
     pib_mun = transform_pib(pib_mun)
     utils.load_dataframe_to_db(pib_mun, db_con, 'pib', db_schema, if_exists='append')
 
