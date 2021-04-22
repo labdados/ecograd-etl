@@ -35,6 +35,9 @@ def extract_populacao_municipio(json='https://servicodados.ibge.gov.br/api/v3/ag
 def extract_pib_uf(json='https://servicodados.ibge.gov.br/api/v3/agregados/5938/periodos/2018/variaveis/37?localidades=N3'):
     return pd.read_json(json)
 
+def extract_pib_municipio(json='https://servicodados.ibge.gov.br/api/v3/agregados/5938/periodos/2018/variaveis/37?localidades=N6'):
+    return pd.read_json(json)
+
 # transform utils
 def transform_agregado_localidade(df, var_name):
     series = df['resultados'][0][0]['series']
@@ -89,7 +92,7 @@ def etl_localidades(db_con, db_schema):
     municipio = transform_municipio(municipio)
     utils.load_dataframe_to_db(municipio, db_con, 'municipio', db_schema)
 
-def etl_populacao_uf(db_con, db_schema):
+def etl_populacao(db_con, db_schema):
     pop_uf = extract_populacao_uf()
     pop_uf = transform_populacao(pop_uf)
     utils.load_dataframe_to_db(pop_uf, db_con, 'populacao', db_schema)
@@ -101,6 +104,9 @@ def etl_pib_uf(db_con, db_schema):
     pib_uf = extract_pib_uf()
     pib_uf = transform_pib(pib_uf)
     utils.load_dataframe_to_db(pib_uf, db_con, 'pib', db_schema)
+    pib_mun = extract_pib_municipio
+    pib_mun = transform_pib(pib_mun)
+    utils.load_dataframe_to_db(pib_mun, db_con, 'pib', db_schema, if_exists='append')
 
 def main(args):
     db_url = utils.build_db_url(
@@ -115,7 +121,7 @@ def main(args):
     db_table = 'populacao_uf'
     db_schema = 'ibge'
     utils.create_db_schema(db_con, db_schema)
-    etl_populacao_uf(db_con, db_schema)
+    etl_populacao(db_con, db_schema)
     etl_localidades(db_con, db_schema)
     etl_pib_uf(db_con,db_schema)
 
