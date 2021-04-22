@@ -52,7 +52,10 @@ def get_file_extension(filename):
 
 def load_csv_to_db(csv_file, db_con, sql_table, sql_schema):
     df = pd.read_csv(csv_file)
-    df.to_sql(sql_table, db_con, sql_schema, index=False, if_exists='replace')
+    load_dataframe_to_db(sql_table, db_con, sql_schema, if_exists='replace')
+
+def load_dataframe_to_db(df, db_con, db_table, db_schema, if_exists='replace'):
+    df.to_sql(db_table, db_con, db_schema, index=False, if_exists=if_exists)
 
 def list_db_column_names(db_con, sql_table, sql_schema="public"):
     try:
@@ -78,6 +81,11 @@ def remove_accents(txt):
         for letter in unicodedata.normalize("NFD", txt)
         if not unicodedata.combining(letter)
     )
+
+def replace_nested_attribute_by_id(df, attribute_name, new_id_col, attribute_id_col='id'):
+    df[new_id_col] = [attribute[attribute_id_col] for attribute in df[attribute_name]]
+    df.drop(attribute_name, inplace=True, axis=1)
+    return df
 
 def main(args):
     download_file(args[0], args[1])
