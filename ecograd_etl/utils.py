@@ -64,9 +64,10 @@ def list_db_column_names(db_con, sql_table, sql_schema="public"):
     except:
         return pd.Index([])
 
-def open_file_from_zip(zip_file_name, extension=".txt"):
+def open_file_from_zip(zip_file_name, extension="txt", prefix=""):
     zip_file = ZipFile(zip_file_name, "r")
-    file_name = [name for name in zip_file.namelist() if name.endswith(extension)][0]
+    regex = re.compile(f".*{prefix}.*{extension}", re.IGNORECASE)
+    file_name = next(filter(regex.match, zip_file.namelist()))
     return(zip_file.open(file_name))
 
 def parse_float(x):

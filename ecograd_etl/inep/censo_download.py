@@ -12,7 +12,6 @@ def download_censo(conf, dataset, years):
     for year in years:
         item_conf = dataset_items[year]
         file_url = item_conf['url']
-        file_extension = utils.get_file_extension(file_url)
         file_name = os.path.join(data_dir, item_conf['filename'])
         print(f"Downloading file {file_name}")
         utils.download_file(file_url, file_name)
