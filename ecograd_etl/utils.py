@@ -7,6 +7,8 @@ import urllib.request
 from sqlalchemy import create_engine
 from zipfile import ZipFile
 
+from sqlalchemy.sql.sqltypes import NullType
+
 def add_db_table_columns(cols, col_type, db_con, sql_table, sql_schema="public"):
     add_cols = ", ".join(['ADD COLUMN "{}" {}'.format(col, col_type) for col in cols])
     db_con.execute(f"ALTER TABLE IF EXISTS {sql_schema}.{sql_table} {add_cols};")
@@ -68,11 +70,13 @@ def list_db_column_names(db_con, sql_table, sql_schema="public"):
     except:
         return pd.Index([])
 
-def open_file_from_zip(zip_file_name, extension="txt", prefix=""):
+def open_file_from_zip(zip_file_name, extension="txt", regex=""):
     zip_file = ZipFile(zip_file_name, "r")
-    regex = re.compile(f".*{prefix}.*{extension}", re.IGNORECASE)
-    file_name = next(filter(regex.match, zip_file.namelist()))
-    return(zip_file.open(file_name))
+    regex = re.compile(f".*{regex}.*{extension}", re.IGNORECASE)
+    files = filter(regex.match, zip_file.namelist())
+    file_name = next(files, None)
+    if file_name:
+        return(zip_file.open(file_name))
 
 def parse_float(x):
    try:

@@ -10,7 +10,7 @@ conf = {
             "tables": {
                 "curso": {
                     "table_name": "curso",
-                    "file_prefix": "SUP_CURSO",
+                    "file_regex": "(SUP_CURSO|DM_CURSO)",
                     "file_extension": "csv"
                 }
             },
