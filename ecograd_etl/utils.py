@@ -78,6 +78,7 @@ def open_file_from_zip(zip_file_name, extension="txt", file_regex=""):
         file_name = next(files, None)
         if not file_name:
             return None
+        print(f"Opening {file_name}")
         file = zip_file.open(file_name)
         if not get_file_extension(file_name).lower() == ".zip":
             return(file)
