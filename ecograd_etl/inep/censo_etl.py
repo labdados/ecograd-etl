@@ -40,8 +40,8 @@ def transform_censo(df, year, rename_cols={}, duplicate_cols={},
         df['ano'] = year
     return df
 
-def load_censo(df, input_file, db_con, sql_table, sql_schema, sql_dtype={}):
-    print(f"Loading {input_file} to {sql_schema}.{sql_table}")
+def load_censo(df, db_con, sql_table, sql_schema, sql_dtype={}):
+    print(f"Loading {sql_schema}.{sql_table}")
     cur_cols = utils.list_db_column_names(db_con, sql_table, sql_schema)
     new_cols = df.columns.difference(cur_cols)
     if not cur_cols.empty and not new_cols.empty:
