@@ -7,10 +7,6 @@ import sys
 
 load_dotenv()
 
-def clean_db(db_con, sql_table, sql_schema):
-    utils.create_db_schema(db_con, sql_schema)
-    utils.drop_db_table(db_con, sql_table, sql_schema)
-
 def extract_indicadores(input_file, na_values={}, **kwargs):
     file_extension = utils.get_file_extension(input_file)
     if file_extension == ".xlsx":
@@ -66,7 +62,7 @@ def etl_indicadores(years, db_con, conf, dataset):
     data_dir = conf['data_dir']
     sql_schema = conf['sql_schema']
     sql_table = conf['datasets'][dataset]['sql_table']
-    clean_db(db_con, sql_table, sql_schema)
+    utils.clean_db(db_con, sql_table, sql_schema)
     dataset_items = conf['datasets'][dataset]['items']
     for year in years:
         item_conf = dataset_items[year]

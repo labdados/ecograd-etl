@@ -25,6 +25,10 @@ def clean_col_name(col):
     col_name = col_name.strip("_")
     return col_name
 
+def clean_db(db_con, sql_table, sql_schema):
+    create_db_schema(db_con, sql_schema)
+    drop_db_table(db_con, sql_table, sql_schema)
+
 def clean_col_names(cols):
     return [clean_col_name(col) for col in cols]
 
