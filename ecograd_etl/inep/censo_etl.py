@@ -69,6 +69,7 @@ def etl_censo(years, db_con, conf, dataset):
             table_name = table['table_name']
             file_extension = table['file_extension']
             file_prefix = table['file_prefix']
+            print(f"Opening file inside {file_prefix}.{file_extension} in {zip_file_name}")
             input_file = utils.open_file_from_zip(zip_file_name, extension=file_extension, prefix=file_prefix)
             df = extract_censo(input_file, '|', na_values, **extract_kwargs)
             rename_cols = conf['rename_columns'] if 'rename_columns' in conf else {}
