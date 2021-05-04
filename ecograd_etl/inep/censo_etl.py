@@ -78,7 +78,7 @@ def etl_censo(years, db_con, conf, dataset):
             df = transform_censo(df, year, rename_cols, duplicate_cols, replace_values, converters)
             print("Columns: ", df.columns)
             sql_dtype = conf['dtype'] if 'dtype' in conf else {}
-            load_censo(df, input_file, db_con, table_name, sql_schema, sql_dtype)
+            load_censo(df, db_con, table_name, sql_schema, sql_dtype)
 
 def main(args):
     conf = censo_config.conf
