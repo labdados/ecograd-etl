@@ -143,7 +143,7 @@ conf = {
         "qt_insc_vagas_prog_esp_int": "qt_insc_prog_esp_integral",
         "qt_insc_vagas_prog_esp_mat": "qt_insc_prog_esp_matutino",
         "qt_insc_vagas_prog_esp_not": "qt_insc_prog_esp_noturno",
-        "qt_insc_vagas_prog_esp_vesp": "qt_insc_vaga_nova_vespertino",
+        "qt_insc_vagas_prog_esp_vesp": "qt_insc_prog_estp_vespertino",
         "qt_insc_vagas_reman_ead": "qt_insc_vaga_reman_ead",
         "qt_insc_vagas_reman_int": "qt_insc_vaga_reman_integral",
         "qt_insc_vagas_reman_mat": "qt_insc_vaga_reman_matutino",
