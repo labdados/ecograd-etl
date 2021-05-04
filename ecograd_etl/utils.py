@@ -71,12 +71,17 @@ def list_db_column_names(db_con, sql_table, sql_schema="public"):
         return pd.Index([])
 
 def open_file_from_zip(zip_file_name, extension="txt", regex=""):
-    zip_file = ZipFile(zip_file_name, "r")
-    regex = re.compile(f".*{regex}.*{extension}", re.IGNORECASE)
-    files = filter(regex.match, zip_file.namelist())
-    file_name = next(files, None)
-    if file_name:
-        return(zip_file.open(file_name))
+    while(True):
+        zip_file = ZipFile(zip_file_name, "r")
+        regex = re.compile(f".*{regex}.*", re.IGNORECASE)
+        files = filter(regex.match, zip_file.namelist())
+        file_name = next(files, None)
+        if not file_name:
+            return None
+        elif get_file_extension(file_name).lower() == "zip":
+            zip_file_name = file_name
+        else:
+            return(zip_file.open(file_name)) 
 
 def parse_float(x):
    try:
