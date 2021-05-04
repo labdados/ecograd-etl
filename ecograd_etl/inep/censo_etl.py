@@ -70,7 +70,7 @@ def etl_censo(years, db_con, conf, dataset):
             file_extension = table['file_extension']
             file_regex = table['file_regex']
             print(f"Opening file inside {file_regex}.{file_extension} in {zip_file_name}")
-            input_file = utils.open_file_from_zip(zip_file_name, file_extension, file_regex)
+            input_file = utils.open_file_from_zip(zip_file_name, file_regex)
             df = extract_censo(input_file, '|', na_values, **extract_kwargs)
             rename_cols = conf['rename_columns'] if 'rename_columns' in conf else {}
             duplicate_cols = conf['duplicate_columns'] if 'duplicate_columns' in conf else {}
