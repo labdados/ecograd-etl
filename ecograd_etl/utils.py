@@ -4,6 +4,7 @@ import re
 import sys
 import unicodedata
 import urllib.request
+from rarfile import RarFile
 from sqlalchemy import create_engine
 from zipfile import ZipFile
 
@@ -70,20 +71,24 @@ def list_db_column_names(db_con, sql_table, sql_schema="public"):
     except:
         return pd.Index([])
 
-def open_file_from_zip(zip_file_name, extension="txt", file_regex=""):
-    zip_file = ZipFile(zip_file_name, "r")
+def open_file_from_zip(zip_file_name, file_regex=""):
+    compressed_file = ZipFile(zip_file_name, "r")
     while(True):
         regex = re.compile(f".*{file_regex}.*", re.IGNORECASE)
-        files = filter(regex.match, zip_file.namelist())
+        files = filter(regex.match, compressed_file.namelist())
         file_name = next(files, None)
         if not file_name:
             return None
         print(f"Opening {file_name}")
-        file = zip_file.open(file_name)
-        if not get_file_extension(file_name).lower() == ".zip":
-            return(file)
+        file = compressed_file.open(file_name)
+        file_extension = get_file_extension(file_name).lower()
+        if file_extension == ".zip":
+            compressed_file = ZipFile(file)
+        elif file_extension == ".rar":
+            compressed_file = RarFile(file)
         else:
-            zip_file = ZipFile(file)
+            return(file)
+            
 
 def parse_float(x):
    try:
