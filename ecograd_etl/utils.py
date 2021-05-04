@@ -86,7 +86,7 @@ def open_file_from_zip(zip_file_name, file_regex=""):
         if file_extension == ".zip":
             compressed_file = ZipFile(file)
         elif file_extension == ".rar":
-            compressed_file = RarFile(BytesIO(file.read()))
+            compressed_file = RarFile(file)
         else:
             return file
             
