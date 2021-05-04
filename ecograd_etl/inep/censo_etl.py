@@ -55,24 +55,29 @@ def load_censo(df, input_file, db_con, sql_table, sql_schema, sql_dtype={}):
 def etl_censo(years, db_con, conf, dataset):
     data_dir = conf['data_dir']
     sql_schema = conf['sql_schema']
-    sql_table = conf['datasets'][dataset]['sql_table']
+    #sql_table = conf['datasets'][dataset]['sql_table']
     utils.clean_db(db_con, sql_table, sql_schema)
     dataset_items = conf['datasets'][dataset]['items']
+    tables = conf['datasets'][dataset]['tables']
     for year in years:
         item_conf = dataset_items[year]
         zip_file_name = os.path.join(data_dir, item_conf['filename'])
         extract_kwargs = item_conf['extract_kwargs'] if 'extract_kwargs' in item_conf else {}
         na_values = conf['na_values'] if 'na_values' in conf else {}
-        input_file = utils.open_file_from_zip(zip_file_name, extension='csv', prefix='SUP_CURSO')
-        df = extract_censo(input_file, '|', na_values, **extract_kwargs)
-        rename_cols = conf['rename_columns'] if 'rename_columns' in conf else {}
-        duplicate_cols = conf['duplicate_columns'] if 'duplicate_columns' in conf else {}
-        replace_values = conf['replace_values'] if 'replace_values' in conf else {}
-        converters = conf['converters'] if 'converters' in conf else {}
-        df = transform_censo(df, year, rename_cols, duplicate_cols, replace_values, converters)
-        print("Columns: ", df.columns)
-        sql_dtype = conf['dtype'] if 'dtype' in conf else {}
-        load_censo(df, input_file, db_con, sql_table, sql_schema, sql_dtype)
+        for table in tables.values():
+            table_name = table['table_name']
+            file_extension = table['file_extension']
+            file_prefix = table['file_prefix']
+            input_file = utils.open_file_from_zip(zip_file_name, extension=file_extension, prefix=file_prefix)
+            df = extract_censo(input_file, '|', na_values, **extract_kwargs)
+            rename_cols = conf['rename_columns'] if 'rename_columns' in conf else {}
+            duplicate_cols = conf['duplicate_columns'] if 'duplicate_columns' in conf else {}
+            replace_values = conf['replace_values'] if 'replace_values' in conf else {}
+            converters = conf['converters'] if 'converters' in conf else {}
+            df = transform_censo(df, year, rename_cols, duplicate_cols, replace_values, converters)
+            print("Columns: ", df.columns)
+            sql_dtype = conf['dtype'] if 'dtype' in conf else {}
+            load_censo(df, input_file, db_con, table_name, sql_schema, sql_dtype)
 
 def main(args):
     conf = censo_config.conf
