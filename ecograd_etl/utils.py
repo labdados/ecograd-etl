@@ -83,7 +83,7 @@ def open_file_from_zip(zip_file_name, extension="txt", file_regex=""):
         if not get_file_extension(file_name).lower() == ".zip":
             return(file)
         else:
-            zip_file = file
+            zip_file = ZipFile(file)
 
 def parse_float(x):
    try:
