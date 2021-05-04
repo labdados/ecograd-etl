@@ -70,15 +70,15 @@ def list_db_column_names(db_con, sql_table, sql_schema="public"):
     except:
         return pd.Index([])
 
-def open_file_from_zip(zip_file_name, extension="txt", regex=""):
+def open_file_from_zip(zip_file_name, extension="txt", file_regex=""):
     while(True):
         zip_file = ZipFile(zip_file_name, "r")
-        regex = re.compile(f".*{regex}.*", re.IGNORECASE)
+        regex = re.compile(f".*{file_regex}.*", re.IGNORECASE)
         files = filter(regex.match, zip_file.namelist())
         file_name = next(files, None)
         if not file_name:
             return None
-        elif get_file_extension(file_name).lower() == "zip":
+        elif get_file_extension(file_name).lower() == ".zip":
             zip_file_name = file_name
         else:
             return(zip_file.open(file_name)) 
