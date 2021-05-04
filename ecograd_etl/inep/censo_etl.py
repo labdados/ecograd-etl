@@ -56,9 +56,10 @@ def etl_censo(years, db_con, conf, dataset):
     data_dir = conf['data_dir']
     sql_schema = conf['sql_schema']
     #sql_table = conf['datasets'][dataset]['sql_table']
-    utils.clean_db(db_con, sql_table, sql_schema)
     dataset_items = conf['datasets'][dataset]['items']
     tables = conf['datasets'][dataset]['tables']
+    for table in tables.values():
+        utils.clean_db(db_con, table['table_name'], sql_schema)
     for year in years:
         item_conf = dataset_items[year]
         zip_file_name = os.path.join(data_dir, item_conf['filename'])
