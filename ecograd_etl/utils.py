@@ -1,5 +1,6 @@
-import pandas as pd
+from io import BytesIO
 import os
+import pandas as pd
 import re
 import sys
 import unicodedata
@@ -80,14 +81,14 @@ def open_file_from_zip(zip_file_name, file_regex=""):
         if not file_name:
             return None
         print(f"Opening {file_name}")
-        file = compressed_file.open(file_name)
         file_extension = get_file_extension(file_name).lower()
+        file = compressed_file.open(file_name)
         if file_extension == ".zip":
             compressed_file = ZipFile(file)
         elif file_extension == ".rar":
-            compressed_file = RarFile(file)
+            compressed_file = RarFile(BytesIO(file.read()))
         else:
-            return(file)
+            return file
             
 
 def parse_float(x):
