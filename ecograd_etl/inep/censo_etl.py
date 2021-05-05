@@ -44,9 +44,10 @@ def load_censo(df, db_con, sql_table, sql_schema, sql_dtype={}):
     print(f"Loading {sql_schema}.{sql_table}")
     cur_cols = utils.list_db_column_names(db_con, sql_table, sql_schema)
     new_cols = df.columns.difference(cur_cols)
-    if not cur_cols.empty and not new_cols.empty:
-        print(f"New columns found: {new_cols}")
-        utils.add_db_table_columns(new_cols, "text", db_con, sql_table, sql_schema)
+    if not cur_cols.empty:
+        if not new_cols.empty:
+            print(f"New columns found: {new_cols}")
+            utils.add_db_table_columns(new_cols, "text", db_con, sql_table, sql_schema)
         missing_cols = cur_cols.difference(df.columns)
         print(f"Missing columns: {missing_cols}")
     df.to_sql(sql_table, db_con, sql_schema, index=False, if_exists='append',
